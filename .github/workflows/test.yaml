@@ -26,6 +26,10 @@ jobs:
         curl -sSL https://install.python-poetry.org | python3 -
         echo "$HOME/.poetry/bin" >> $GITHUB_PATH
         poetry config virtualenvs.create false
+    - name: Install Ubuntu build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential python3-dev libblas-dev liblapack-dev
     - name: Install dependencies
       run: poetry install
     - name: Test with pytest
