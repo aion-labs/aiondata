@@ -18,10 +18,15 @@ jobs:
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
         echo "$HOME/.poetry/bin" >> $GITHUB_PATH
-    - name: Install Ubuntu build dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential python3-dev libblas-dev liblapack-dev
+    - name: Configure Poetry
+      run: poetry config virtualenvs.create false
+    - name: Cache Poetry dependencies
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pypoetry
+        key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-poetry-
     - name: Build and Publish
       env:
         POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
