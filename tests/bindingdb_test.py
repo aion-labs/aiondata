@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from unittest.mock import patch
 import polars as pl
 from aiondata import BindingDB
 
@@ -26,9 +27,42 @@ def test_numeric_conversion():
                 ), f"Field {key} is not a float or None."
 
 
-def test_dataframe_creation():
-    """Test that a DataFrame is correctly created from the SDF file."""
+@patch("pathlib.Path.mkdir")
+@patch("pathlib.Path.exists")
+@patch("polars.DataFrame.write_parquet")
+def test_dataframe_no_cache(mock_write_parquet, mock_exists, mock_mkdir):
+    """Test that a DataFrame is created and cached."""
+    mock_exists.return_value = False
+
     df = BindingDB(mock_sdf_path).to_df()
+
     assert isinstance(df, pl.DataFrame), "DataFrame not created."
     assert df.height > 0, "DataFrame is empty."
     assert "SMILES" in df.columns, "SMILES column missing in DataFrame."
+    mock_mkdir.assert_called_once_with(parents=True, exist_ok=True)
+    mock_write_parquet.assert_called_once()
+
+
+@patch("pathlib.Path.mkdir")
+@patch("polars.DataFrame.write_parquet")
+@patch("pathlib.Path.exists")
+@patch("polars.read_parquet")
+def test_dataframe_creation_from_cache(
+    mock_read_parquet, mock_exists, mock_write_parquet, mock_mkdir
+):
+    """Test that a DataFrame is created from cache."""
+    mock_exists.return_value = True
+    mock_df = pl.DataFrame({"SMILES": ["C"], "Ki (nM)": [1.0]})
+    mock_read_parquet.return_value = mock_df
+
+    df = BindingDB(mock_sdf_path).to_df()
+
+    assert isinstance(df, pl.DataFrame), "DataFrame not created from cache."
+    assert df.height > 0, "DataFrame is empty."
+    assert "SMILES" in df.columns, "SMILES column missing in DataFrame."
+    mock_mkdir.assert_called_once_with(parents=True, exist_ok=True)
+    mock_write_parquet.assert_not_called()
+    mock_read_parquet.assert_called_once()
+    assert df.frame_equal(
+        mock_df
+    ), "DataFrame content does not match expected mock DataFrame."
