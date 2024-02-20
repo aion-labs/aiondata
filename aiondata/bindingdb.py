@@ -26,11 +26,11 @@ class BindingDB:
         "koff (s-1)",
     }
 
-    def __init__(self, sdf_file_path: str):
+    def __init__(self, sdf_file_path: os.PathLike):
         """Initializes a BindingDB object.
 
         Args:
-            sdf_file_path (str): The file path to the BindingDB SDF file.
+            sdf_file_path (os.PathLike): The file path to the BindingDB SDF file.
         """
         self.sdf_file_path = sdf_file_path
 
