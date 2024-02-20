@@ -1,7 +1,8 @@
+import logging
 import os
 from pathlib import Path
 from typing import Iterable, Union
-from rdkit import Chem
+from rdkit import Chem, RDLogger
 import polars as pl
 from tqdm.auto import tqdm
 
@@ -70,6 +71,8 @@ class BindingDB:
         Yields:
             dict: A dictionary representing a BindingDB record.
         """
+        RDLogger.DisableLog("rdApp.*")  # Suppress RDKit warnings and errors
+
         if progress_bar:
             pb = tqdm
         else:
@@ -83,6 +86,10 @@ class BindingDB:
                 }
                 record["SMILES"] = Chem.MolToSmiles(mol)
                 yield record
+
+        # Re-enable logging
+        RDLogger.EnableLog("rdApp.error")
+        RDLogger.EnableLog("rdApp.warning")
 
     def to_df(self) -> pl.DataFrame:
         """Converts an SDF file from BindingDB into a Polars DataFrame.
