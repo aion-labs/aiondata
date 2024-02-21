@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 import polars as pl
-import pandas as pd
 
 class MoleculeNet:
     CACHE_DIR = (
@@ -44,15 +43,15 @@ class FoldswitchProteins(MoleculeNet):
     def __init__(self):
     
         SOURCE = "data/pro4353-sup-0002-tables1/Table_S1A_final.xlsx"
-        df = pd.read_excel(SOURCE)
+        df = pl.read_excel(SOURCE)
         self.S1A = pl.DataFrame(df)
 
         SOURCE = "data/pro4353-sup-0002-tables1/Table_S1B_final.xlsx"
-        df = pd.read_excel(SOURCE)
+        df = pl.read_excel(SOURCE)
         self.S1B = pl.DataFrame(df)
 
         SOURCE = "data/pro4353-sup-0002-tables1/Table_S1C_final.xlsx"
-        df = pd.read_excel(SOURCE)
+        df = pl.read_excel(SOURCE)
         self.S1C = pl.DataFrame(df)
 
 
