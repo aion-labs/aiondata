@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 import polars as pl
-
+import pandas as pd
 
 class MoleculeNet:
     CACHE_DIR = (
@@ -19,6 +19,30 @@ class MoleculeNet:
             df = pl.read_csv(self.SOURCE)
             df.write_parquet(cache_path)
             return df
+
+
+class FoldswitchProteins(MoleculeNet):
+    """
+    Papaer:AlphaFold2 fails to predict protein fold switching
+    https://doi.org/10.1002/pro.4353
+    (a) List of pairs (PDBIDs), lengths and the sequence of the fold-switching region. (For those pairs not having the second fold solved in PDB, only the first PDB is reported).
+    (b) RMSD, TM-scores for the whole protein and only fold-switching fragment, as well as sequence identities between the fold-switching pairs. wTM-score/wRMSD indicate TM-scores/RMSDs considering whole protein chains. fsTM-score/fsRMSD indicate TM-scores/RMSDs considering fold-switching regions only.
+    (c) List of fold-switching protein pairs (PDBID and chain) used for the analysis, first column corresponds to Fold1 and second to Fold2, followed by TM-scores of the predictions. Tables attached separately.
+    """
+
+    def __init__(self):
+    
+        SOURCE = "data/pro4353-sup-0002-tables1/Table_S1A_final.xlsx"
+        df = pd.read_excel(SOURCE)
+        self.S1A = pl.DataFrame(df)
+
+        SOURCE = "data/pro4353-sup-0002-tables1/Table_S1B_final.xlsx"
+        df = pd.read_excel(SOURCE)
+        self.S1B = pl.DataFrame(df)
+
+        SOURCE = "data/pro4353-sup-0002-tables1/Table_S1C_final.xlsx"
+        df = pd.read_excel(SOURCE)
+        self.S1C = pl.DataFrame(df)
 
 
 class Tox21(MoleculeNet):
