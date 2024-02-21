@@ -1,5 +1,6 @@
 from .bindingdb import BindingDB
 from .moleculenet import (
+    CodNas91,
     FoldswitchProteins,
     Tox21,
     ESOL,
