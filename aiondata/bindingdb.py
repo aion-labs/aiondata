@@ -1,24 +1,16 @@
-import logging
-import os
-from pathlib import Path
-from typing import Iterable, Union
-from rdkit import Chem, RDLogger
-import polars as pl
+import io
+from typing import Optional
+import urllib.request
+from rdkit import Chem
+from rdkit import RDLogger
 from tqdm.auto import tqdm
+import zipfile
 
 from .datasets import GeneratedDataset
 
 
 class BindingDB(GeneratedDataset):
-    """BindingDB
-
-    A public, web-accessible database of measured binding affinities, focusing chiefly on the interactions of protein considered to be drug-targets with small, drug-like molecules.
-    """
-
-    CACHE_DIR = (
-        Path(os.environ.get("AIONDATA_CACHE", Path("~/.aiondata"))).expanduser()
-        / "bindingdb"
-    )
+    SOURCE = "https://www.bindingdb.org/bind/downloads/BindingDB_All_3D_202402_sdf.zip"
 
     float_fields = {
         "Ki (nM)",
@@ -29,25 +21,14 @@ class BindingDB(GeneratedDataset):
         "koff (s-1)",
     }
 
-    def __init__(self, sdf_file_path: os.PathLike):
-        """Initializes a BindingDB object.
-
-        Args:
-            sdf_file_path (os.PathLike): The file path to the BindingDB SDF file.
-        """
-        self.sdf_file_path = sdf_file_path
+    def __init__(self, fd: Optional[io.BytesIO] = None):
+        if fd is None:
+            self.fd = self.from_url(self.SOURCE)
+        else:
+            self.fd = fd
 
     @staticmethod
-    def _convert_to_numeric(prop_name: str, value: str) -> Union[int, float, None]:
-        """Converts a string value to a numeric type if appropriate, or None for conversion failures.
-
-        Args:
-            prop_name (str): The name of the property.
-            value (str): The string value to be converted.
-
-        Returns:
-            Union[int, float, None]: The converted numeric value or None if conversion fails.
-        """
+    def _convert_to_numeric(prop_name: str, value: str):
         if prop_name in BindingDB.float_fields:
             try:
                 return float(value)
@@ -63,28 +44,39 @@ class BindingDB(GeneratedDataset):
             except ValueError:
                 return value
 
-    def to_generator(self, progress_bar: bool = True) -> Iterable[dict]:
-        """
-        Returns a generator for the records in BindingDB.
+    @staticmethod
+    def from_url(url: str) -> "BindingDB":
+        with urllib.request.urlopen(url) as response:
+            with zipfile.ZipFile(io.BytesIO(response.read())) as z:
+                sdf_name = z.namelist()[0]
+                with z.open(sdf_name) as sdf_file:
+                    sdf_content = io.BytesIO(sdf_file.read())
+        return BindingDB(sdf_content)
 
-        Args:
-            progress_bar (bool, optional): Whether to display a progress bar. Defaults to True.
+    @staticmethod
+    def from_uncompressed_file(file_path: str) -> "BindingDB":
+        with open(file_path, "rb") as f:
+            file_content = io.BytesIO(f.read())
+        return BindingDB(file_content)
 
-        Yields:
-            dict: A dictionary representing a BindingDB record.
-        """
+    def to_generator(self, progress_bar: bool = True):
         RDLogger.DisableLog("rdApp.*")  # Suppress RDKit warnings and errors
+
+        sd = Chem.ForwardSDMolSupplier(self.fd, sanitize=False, removeHs=False)
 
         if progress_bar:
             pb = tqdm
         else:
-            pb = lambda x, **kwargs: x
-        suppl = Chem.SDMolSupplier(self.sdf_file_path)
-        for mol in pb(suppl, desc="Parsing BindingDB", unit=" molecule"):
+
+            def pb(x, **kwargs):
+                return x
+
+        for mol in pb(sd, desc="Parsing BindingDB", unit=" molecule"):
             if mol is not None:
                 record = {
-                    prop: BindingDB._convert_to_numeric(prop, mol.GetProp(prop))
+                    prop: self._convert_to_numeric(prop, mol.GetProp(prop))
                     for prop in mol.GetPropNames()
+                    if mol.HasProp(prop)
                 }
                 record["SMILES"] = Chem.MolToSmiles(mol)
                 yield record

@@ -10,7 +10,9 @@ mock_sdf_path = current_file_dir / "mock.sdf"
 
 def test_sdf_to_generator():
     """Test that the generator yields records with expected structure."""
-    records = list(BindingDB(mock_sdf_path).to_generator())
+    bindingdb = BindingDB.from_uncompressed_file(mock_sdf_path)
+
+    records = list(bindingdb.to_generator())
     assert len(records) > 0, "No records generated."
     for record in records:
         assert "SMILES" in record, "SMILES not found in record."
