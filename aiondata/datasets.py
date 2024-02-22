@@ -35,3 +35,9 @@ class ExcelDataset(CachedDataset):
 
     def get_df(self) -> pl.DataFrame:
         return pl.read_excel(self.SOURCE)
+
+
+class GeneratedDataset(CachedDataset):
+
+    def get_df(self) -> pl.DataFrame:
+        return pl.DataFrame(self.to_generator())

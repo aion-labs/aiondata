@@ -6,8 +6,10 @@ from rdkit import Chem, RDLogger
 import polars as pl
 from tqdm.auto import tqdm
 
+from .datasets import GeneratedDataset
 
-class BindingDB:
+
+class BindingDB(GeneratedDataset):
     """BindingDB
 
     A public, web-accessible database of measured binding affinities, focusing chiefly on the interactions of protein considered to be drug-targets with small, drug-like molecules.
@@ -90,18 +92,3 @@ class BindingDB:
         # Re-enable logging
         RDLogger.EnableLog("rdApp.error")
         RDLogger.EnableLog("rdApp.warning")
-
-    def to_df(self) -> pl.DataFrame:
-        """Converts an SDF file from BindingDB into a Polars DataFrame.
-
-        Returns:
-            polars.DataFrame: A DataFrame containing BindingDB data.
-        """
-        self.CACHE_DIR.mkdir(parents=True, exist_ok=True)
-        cache_path = self.CACHE_DIR / f"{Path(self.sdf_file_path).stem}.parquet"
-        if cache_path.exists():
-            return pl.read_parquet(cache_path)
-        else:
-            df = pl.DataFrame(self.to_generator(self.sdf_file_path))
-            df.write_parquet(cache_path)
-            return df
