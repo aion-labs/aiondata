@@ -12,6 +12,12 @@ class CachedDataset:
     )
 
     def to_df(self) -> pl.DataFrame:
+        """
+        Converts the dataset to a Polars DataFrame.
+
+        Returns:
+            pl.DataFrame: The dataset as a Polars DataFrame.
+        """
         self.CACHE_DIR.mkdir(parents=True, exist_ok=True)
         dataset_name = self.__class__.__name__.lower()
         cache_path = self.CACHE_DIR / f"{dataset_name}.parquet"
@@ -38,6 +44,7 @@ class ExcelDataset(CachedDataset):
 
 
 class GeneratedDataset(CachedDataset):
+    """A base class for datasets that are generated on-the-fly."""
 
     def get_df(self) -> pl.DataFrame:
         return pl.DataFrame(self.to_generator())
