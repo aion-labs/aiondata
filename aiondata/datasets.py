@@ -30,7 +30,7 @@ class CsvDataset(CachedDataset):
         return pl.read_csv(self.SOURCE)
 
 
-class ExcelData(CachedDataset):
+class ExcelDataset(CachedDataset):
     """A base class for datasets that are stored in Excel format."""
 
     def get_df(self) -> pl.DataFrame:
