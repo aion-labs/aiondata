@@ -128,6 +128,13 @@ class BindingDB(GeneratedDataset):
                     for prop in mol.GetPropNames()
                     if mol.HasProp(prop)
                 }
+
+                # Normalize PubChem SID and CID fields that are sometimes present in the SDF
+                if "PubChem SID" in record:
+                    record["PubChem SID of Ligand"] = record.pop("PubChem SID")
+                if "PubChem CID" in record:
+                    record["PubChem CID of Ligand"] = record.pop("PubChem CID")
+
                 record["SMILES"] = Chem.MolToSmiles(mol)
                 yield record
 
