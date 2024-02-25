@@ -3,7 +3,7 @@ from .datasets import ExcelDataset, CsvDataset
 
 class FoldswitchProteins:
     """
-    Papaer:AlphaFold2 fails to predict protein fold switching
+    Paper: AlphaFold2 fails to predict protein fold switching
     https://doi.org/10.1002/pro.4353
     """
 
