@@ -1,35 +1,40 @@
 from .datasets import ExcelDataset, CsvDataset
 
 
-class FoldswitchProteins:
-    """
-    Paper: AlphaFold2 fails to predict protein fold switching
+class FoldswitchProteinsTableS1A(ExcelDataset):
+    """(A) List of pairs (PDBIDs), lengths and the sequence of the fold-switching region.
+    (For those pairs not having the second fold solved in PDB, only the first PDB is reported).
+
+    From Paper: AlphaFold2 fails to predict protein fold switching
     https://doi.org/10.1002/pro.4353
     """
 
-    class Table_S1A(ExcelDataset):
-        """(A) List of pairs (PDBIDs), lengths and the sequence of the fold-switching region.
-        (For those pairs not having the second fold solved in PDB, only the first PDB is reported).
-        """
+    SOURCE = "https://raw.githubusercontent.com/tomshani/aiondata/tom-branch/data/pro4353-sup-0002-tables1%20/Table_S1A_final.xlsx"
 
-        SOURCE = "https://raw.githubusercontent.com/tomshani/aiondata/tom-branch/data/pro4353-sup-0002-tables1%20/Table_S1A_final.xlsx"
 
-    class Table_S1B(ExcelDataset):
-        """(B) RMSD, TM-scores for the whole protein and only fold-switching fragment,
-        as well as sequence identities between the fold-switching pairs.
-        wTM-score/wRMSD indicate TM-scores/RMSDs considering whole protein chains.
-        fsTM-score/fsRMSD indicate TM-scores/RMSDs considering fold-switching regions only.
-        """
+class FoldswitchProteinsTableS1B(ExcelDataset):
+    """(B) RMSD, TM-scores for the whole protein and only fold-switching fragment,
+    as well as sequence identities between the fold-switching pairs.
+    wTM-score/wRMSD indicate TM-scores/RMSDs considering whole protein chains.
+    fsTM-score/fsRMSD indicate TM-scores/RMSDs considering fold-switching regions only.
 
-        SOURCE = "https://raw.githubusercontent.com/tomshani/aiondata/tom-branch/data/pro4353-sup-0002-tables1%20/Table_S1B_final.xlsx"
+    From Paper: AlphaFold2 fails to predict protein fold switching
+    https://doi.org/10.1002/pro.4353
+    """
 
-    class Table_S1C(ExcelDataset):
-        """(C) List of fold-switching protein pairs (PDBID and chain) used for the analysis,
-        first column corresponds to Fold1 and second to Fold2, followed by TM-scores of the predictions.
-        Tables attached separately.
-        """
+    SOURCE = "https://raw.githubusercontent.com/tomshani/aiondata/tom-branch/data/pro4353-sup-0002-tables1%20/Table_S1B_final.xlsx"
 
-        SOURCE = "https://raw.githubusercontent.com/tomshani/aiondata/tom-branch/data/pro4353-sup-0002-tables1%20/Table_S1C_final.xlsx"
+
+class FoldswitchProteinsTableS1C(ExcelDataset):
+    """(C) List of fold-switching protein pairs (PDBID and chain) used for the analysis,
+    first column corresponds to Fold1 and second to Fold2, followed by TM-scores of the predictions.
+    Tables attached separately.
+
+    From Paper: AlphaFold2 fails to predict protein fold switching
+    https://doi.org/10.1002/pro.4353
+    """
+
+    SOURCE = "https://raw.githubusercontent.com/tomshani/aiondata/tom-branch/data/pro4353-sup-0002-tables1%20/Table_S1C_final.xlsx"
 
 
 class CodNas91(CsvDataset):

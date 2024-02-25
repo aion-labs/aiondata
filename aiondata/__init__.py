@@ -1,5 +1,10 @@
 from .bindingdb import BindingDB
-from .protein_structure import FoldswitchProteins, CodNas91
+from .protein_structure import (
+    FoldswitchProteinsTableS1A,
+    FoldswitchProteinsTableS1B,
+    FoldswitchProteinsTableS1C,
+    CodNas91,
+)
 from .moleculenet import (
     Tox21,
     ESOL,
