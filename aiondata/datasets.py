@@ -11,7 +11,7 @@ class CachedDataset:
         / "moleculenet"
     )
 
-    def to_df(self) -> pl.DataFrame:
+    def to_df(self,separator=",") -> pl.DataFrame:
         """
         Converts the dataset to a Polars DataFrame.
 
@@ -24,7 +24,10 @@ class CachedDataset:
         if cache_path.exists():
             return pl.read_parquet(cache_path)
         else:
-            df = self.get_df()
+            if isinstance(self, CsvDataset):
+                df = self.get_df(separator=",")
+            else:
+                df = self.get_df()
             df.write_parquet(cache_path)
             return df
 
@@ -32,8 +35,8 @@ class CachedDataset:
 class CsvDataset(CachedDataset):
     """A base class for datasets that are stored in CSV format."""
 
-    def get_df(self) -> pl.DataFrame:
-        return pl.read_csv(self.SOURCE)
+    def get_df(self,separator=",") -> pl.DataFrame:
+        return pl.read_csv(self.SOURCE,separator=separator)
 
 
 class ExcelDataset(CachedDataset):
