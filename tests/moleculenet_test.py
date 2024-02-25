@@ -15,6 +15,10 @@ from aiondata import (
     BBBP,
     SIDER,
     ClinTox,
+    FoldswitchProteinsTableS1A,
+    FoldswitchProteinsTableS1B,
+    FoldswitchProteinsTableS1C,
+    CodNas91,
 )
 
 # List of dataset classes
@@ -32,6 +36,10 @@ datasets = [
     BBBP,
     SIDER,
     ClinTox,
+    FoldswitchProteinsTableS1A,
+    FoldswitchProteinsTableS1B,
+    FoldswitchProteinsTableS1C,
+    CodNas91,
 ]
 
 
@@ -40,9 +48,11 @@ datasets = [
 @patch("polars.DataFrame.write_parquet")
 @patch("pathlib.Path.exists")
 @patch("polars.read_csv")
+@patch("polars.read_excel")
 @patch("polars.read_parquet")
 def test_dataframe_loading_without_cache(
     mock_read_parquet,
+    mock_read_excel,
     mock_read_csv,
     mock_exists,
     mock_write_parquet,
@@ -50,15 +60,27 @@ def test_dataframe_loading_without_cache(
     dataset_cls,
 ):
     """Test that the to_df method correctly loads a dataset into a DataFrame without using the cache."""
+    mock_df = pl.DataFrame({"smiles": ["CCO", "NCCO"], "label": [0, 1]})
     mock_exists.return_value = False
-    mock_read_csv.return_value = pl.DataFrame(
-        {"smiles": ["CCO", "NCCO"], "label": [0, 1]}
-    )
+    mock_read_csv.return_value = mock_df
+    mock_read_excel.return_value = mock_df
 
     dataset_instance = dataset_cls()
     df = dataset_instance.to_df()
 
-    mock_read_csv.assert_called_once_with(dataset_instance.SOURCE)
+    csv_called_correctly = (
+        mock_read_csv.call_args is not None
+        and mock_read_csv.call_args[0][0] == dataset_instance.SOURCE
+    )
+    excel_called_correctly = (
+        mock_read_excel.call_args is not None
+        and mock_read_excel.call_args[0][0] == dataset_instance.SOURCE
+    )
+
+    assert (
+        csv_called_correctly or excel_called_correctly
+    ), "Either CSV or Excel read method should be called with the dataset source."
+
     assert isinstance(df, pl.DataFrame), "The method should return a Polars DataFrame."
     assert len(df) > 0, "DataFrame should not be empty."
     mock_mkdir.assert_called_once_with(parents=True, exist_ok=True)
