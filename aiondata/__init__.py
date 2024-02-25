@@ -1,7 +1,6 @@
 from .bindingdb import BindingDB
+from .protein_structure import FoldswitchProteins, CodNas91
 from .moleculenet import (
-    FoldswitchProteins,
-    CodNas91,
     Tox21,
     ESOL,
     FreeSolv,
