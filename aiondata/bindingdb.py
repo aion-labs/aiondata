@@ -34,9 +34,7 @@ class BindingDB(GeneratedDataset):
             fd (Optional[io.BytesIO]): The file-like object containing the dataset content.
                 If `fd` is not provided, the dataset content will be fetched from the default source.
         """
-        if fd is None:
-            self.fd = self.from_url(self.SOURCE)
-        else:
+        if fd is not None:
             self.fd = fd
 
     @staticmethod
@@ -50,7 +48,6 @@ class BindingDB(GeneratedDataset):
 
         Returns:
             The converted numeric value, or None if conversion fails.
-
         """
         if prop_name in BindingDB.float_fields:
             try:
@@ -111,6 +108,9 @@ class BindingDB(GeneratedDataset):
             dict: A dictionary representing a record in the dataset.
         """
         RDLogger.DisableLog("rdApp.*")  # Suppress RDKit warnings and errors
+
+        if self.fd is None:
+            self.fd = self.from_url(self.SOURCE)
 
         sd = Chem.ForwardSDMolSupplier(self.fd, sanitize=False, removeHs=False)
 
