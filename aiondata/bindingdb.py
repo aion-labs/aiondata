@@ -84,6 +84,23 @@ class BindingDB(GeneratedDataset):
         return BindingDB(sdf_content)
 
     @staticmethod
+    def from_compressed_file(file_path: str) -> "BindingDB":
+        """
+        Creates a BindingDB instance from a compressed SDF file.
+
+        Args:
+            file_path (str): The path to the compressed file.
+
+        Returns:
+            A BindingDB instance.
+        """
+        with zipfile.ZipFile(file_path) as z:
+            sdf_name = z.namelist()[0]
+            with z.open(sdf_name) as sdf_file:
+                sdf_content = io.BytesIO(sdf_file.read())
+        return BindingDB(sdf_content)
+
+    @staticmethod
     def from_uncompressed_file(file_path: str) -> "BindingDB":
         """
         Creates a BindingDB instance from an uncompressed SDF file.
@@ -109,6 +126,11 @@ class BindingDB(GeneratedDataset):
             dict: A dictionary representing a record in the dataset.
         """
         RDLogger.DisableLog("rdApp.*")  # Suppress RDKit warnings and errors
+
+        cached_sdf = self.get_cache_path().parent / "BindingDB.sdf.zip"
+
+        if cached_sdf.exists():
+            self.fd = self.from_compressed_file(cached_sdf)
 
         if self.fd is None:
             self.fd = self.from_url(self.SOURCE)

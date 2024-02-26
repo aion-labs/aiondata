@@ -41,7 +41,7 @@ def test_dataframe_no_cache(mock_write_parquet, mock_exists, mock_mkdir):
     assert isinstance(df, pl.DataFrame), "DataFrame not created."
     assert df.height > 0, "DataFrame is empty."
     assert "SMILES" in df.columns, "SMILES column missing in DataFrame."
-    mock_mkdir.assert_called_once_with(parents=True, exist_ok=True)
+    mock_mkdir.assert_called_with(parents=True, exist_ok=True)
     mock_write_parquet.assert_called_once()
 
 
