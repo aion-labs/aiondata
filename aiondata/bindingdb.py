@@ -16,6 +16,7 @@ class BindingDB(GeneratedDataset):
     """
 
     SOURCE = "https://www.bindingdb.org/bind/downloads/BindingDB_All_3D_202402_sdf.zip"
+    COLLECTION = "bindingdb"
 
     float_fields = {
         "Ki (nM)",

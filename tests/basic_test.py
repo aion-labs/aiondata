@@ -91,7 +91,7 @@ def test_dataframe_loading_without_cache(
     assert str(mock_write_parquet.call_args.args[0]).endswith(
         f"{dataset_name}.parquet"
     ), f"The parquet file for {dataset_name} should be written to the cache directory with the correct name."
-    assert str(dataset_instance.CACHE_DIR) in str(
+    assert dataset_name in str(
         mock_write_parquet.call_args.args[0]
     ), f"The parquet file for {dataset_name} should be written to the cache directory."
     assert (

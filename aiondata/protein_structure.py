@@ -10,6 +10,7 @@ class FoldswitchProteinsTableS1A(ExcelDataset):
     """
 
     SOURCE = "https://raw.githubusercontent.com/tomshani/aiondata/tom-branch/data/pro4353-sup-0002-tables1%20/Table_S1A_final.xlsx"
+    COLLECTION = "foldswitch_proteins"
 
 
 class FoldswitchProteinsTableS1B(ExcelDataset):
@@ -23,6 +24,7 @@ class FoldswitchProteinsTableS1B(ExcelDataset):
     """
 
     SOURCE = "https://raw.githubusercontent.com/tomshani/aiondata/tom-branch/data/pro4353-sup-0002-tables1%20/Table_S1B_final.xlsx"
+    COLLECTION = "foldswitch_proteins"
 
 
 class FoldswitchProteinsTableS1C(ExcelDataset):
@@ -35,6 +37,7 @@ class FoldswitchProteinsTableS1C(ExcelDataset):
     """
 
     SOURCE = "https://raw.githubusercontent.com/tomshani/aiondata/tom-branch/data/pro4353-sup-0002-tables1%20/Table_S1C_final.xlsx"
+    COLLECTION = "foldswitch_proteins"
 
 
 class CodNas91(CsvDataset):
