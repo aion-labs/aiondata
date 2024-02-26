@@ -35,6 +35,15 @@ AionData provides access to the following datasets:
     - **SIDER**: Contains information on marketed medicines and their recorded adverse drug reactions, for side effects prediction.
     - **ClinTox**: Compares drugs approved by the FDA and those that failed clinical trials for toxicity reasons, for binary classification and toxicity prediction.
 
+- **Foldswitch Proteins**: Datasets from the paper [AlphaFold2 fails to predict protein fold switching](https://pubmed.ncbi.nlm.nih.gov/35634782/) featuring information on fold-switching proteins. These datasets provide insights into the structural dynamics and functional versatility of proteins, highlighting cases where AlphaFold2's predictive capabilities are challenged.
+
+    - **Table S1A**: Lists pairs of proteins (PDBIDs), their lengths, and the sequence of the fold-switching region. For some pairs, only the first fold's PDBID is available if the second fold has not been solved.
+    - **Table S1B**: Offers RMSD and TM-scores for the whole protein and the fold-switching fragment specifically, along with sequence identities between the fold-switching pairs.
+    - **Table S1C**: Provides a list of fold-switching protein pairs (PDBID and chain) used for analysis, including TM-scores of the predictions.
+
+- **CodNas91**: A dataset curated from the paper [Impact of protein conformational diversity on AlphaFold predictions](https://pubmed.ncbi.nlm.nih.gov/35561203/), featuring 91 proteins with varying degrees of conformational diversity. This dataset focuses on apo–holo pairs selected for their significant structural changes associated with biological processes.
+
+
 License
 -------
 
