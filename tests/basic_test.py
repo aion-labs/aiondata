@@ -3,6 +3,7 @@ from unittest.mock import patch
 import polars as pl
 from aiondata import (
     Tox21,
+    ToxCast,
     ESOL,
     FreeSolv,
     Lipophilicity,
@@ -24,6 +25,7 @@ from aiondata import (
 # List of dataset classes
 datasets = [
     Tox21,
+    ToxCast,
     ESOL,
     FreeSolv,
     Lipophilicity,

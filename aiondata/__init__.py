@@ -7,6 +7,7 @@ from .protein_structure import (
 )
 from .moleculenet import (
     Tox21,
+    ToxCast,
     ESOL,
     FreeSolv,
     Lipophilicity,

@@ -21,6 +21,16 @@ class Tox21(MoleculeNet):
     SOURCE = "https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/tox21.csv.gz"
 
 
+class ToxCast(MoleculeNet):
+    """
+    ToxCast is a large-scale dataset for toxicity prediction, which includes over 600 experiments across 185 assays.
+    """
+
+    SOURCE = (
+        "https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/toxcast_data.csv.gz"
+    )
+
+
 class ESOL(MoleculeNet):
     """
     ESOL is a dataset consisting of water solubility data for 1,128 compounds. The dataset is widely used for developing models that predict solubility directly from chemical structures.
