@@ -22,6 +22,7 @@ AionData provides access to the following datasets:
 - **MoleculeNet**: An extensive collection of datasets curated to support and benchmark the development of machine learning models in the realm of drug discovery and chemical informatics. Covers a broad spectrum of molecular data including quantum mechanical properties, physical chemistry, biophysics, and physiological effects.
  
     - **Tox21**: Features qualitative toxicity measurements for 12,000 compounds across 12 targets, used for toxicity prediction.
+    - **ToxCast**: ToxCast is a large-scale dataset for toxicity prediction, which includes over 600 experiments across 185 assays.
     - **ESOL**: Contains water solubility data for 1,128 compounds, aiding in solubility prediction models.
     - **FreeSolv**: Provides experimental and calculated hydration free energy for small molecules, crucial for understanding solvation.
     - **Lipophilicity**: Includes experimental measurements of octanol/water distribution coefficients (logD) for 4,200 compounds.
