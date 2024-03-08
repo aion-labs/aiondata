@@ -1,4 +1,8 @@
-from .datasets import ExcelDataset, CsvDataset
+from .datasets import ExcelDataset, CsvDataset,CachedDataset
+from Bio import PDB
+from pypdb import get_all_info, get_ligands
+from pypdb.clients.search.operators import text_operators
+from pypdb.clients.search.search_client import QueryGroup, LogicalOperator,ReturnType,perform_search_with_graph
 
 
 class FoldswitchProteinsTableS1A(ExcelDataset):
@@ -52,3 +56,127 @@ class CodNas91(CsvDataset):
     """
 
     SOURCE = "https://raw.githubusercontent.com/tomshani/aiondata/tom-branch/data/Supplementary_Table_1_91_apo_holo_pairs.csv"
+
+
+class PDBHandler(CachedDataset):
+    """
+    A class for handling PDB files.
+
+    Attributes:
+    - COLLECTION: The collection name for the PDB files.
+
+    Methods:
+    - get_pdb: Retrieves PDB files from the PDB database.
+    - get_pdb_info: Retrieves information about a specific PDB file.
+    - get_ligand_info: Retrieves information about ligands in a specific PDB file.
+    - searchpdb: Performs a search in the PDB database based on specified criteria.
+    """
+
+    COLLECTION = "PDB_files"
+
+    def __init__(self):
+        """
+        Initializes the PDBHandler object.
+
+        Parameters:
+        - None
+
+        Returns:
+        - None
+        """
+        self.pdb_list = PDB.PDBList()
+        self.save_dir = self.get_cache_path()
+
+    def get_pdb(self, pdb_ids, file_format='pdb'):
+        """
+        Retrieves PDB files from the PDB database.
+
+        Parameters:
+        - pdb_ids: A string or a list of PDB IDs.
+        - file_format: The format of the retrieved PDB files (default: 'pdb').
+
+        Returns:
+        - None
+        """
+        if isinstance(pdb_ids, str):
+            self.pdb_list.retrieve_pdb_file(pdb_id, pdir=self.save_dir, file_format=file_format)
+        else:            
+            for pdb_id in pdb_ids:
+                self.pdb_list.retrieve_pdb_file(pdb_id, pdir=self.save_dir, file_format=file_format)
+        
+    def get_pdb_info(self, pdb_id):
+        """
+        Retrieves information about a specific PDB file.
+
+        Parameters:
+        - pdb_id: The ID of the PDB file.
+
+        Returns:
+        - The information about the PDB file.
+        """
+        return get_all_info(pdb_id)
+    
+    def get_ligand_info(self, pdb_id):
+        """
+        Retrieves information about ligands in a specific PDB file.
+
+        Parameters:
+        - pdb_id: The ID of the PDB file.
+
+        Returns:
+        - The information about the ligands in the PDB file.
+        """
+        return get_ligands(pdb_id)
+    
+    def searchpdb(self, title=None, fromdb=None, organism=None, Uniprot_accession=None):
+        """
+        Performs a search in the PDB database based on specified criteria.
+
+        Parameters:
+        - title: The title of the PDB file.
+        - fromdb: The database from which the PDB file is obtained.
+        - organism: The organism associated with the PDB file.
+        - Uniprot_accession: The UniProt accession number associated with the PDB file.
+
+        Returns:
+        - The search results from the PDB database.
+
+        Example:
+        searchpdb(Uniprot_accession="P04637",title="Solution",organism="9606",fromdb="UniProt")
+
+        """
+        # title name search
+        if title:
+            title = text_operators.ContainsPhraseOperator(value=title,
+                                                        attribute="struct.title")
+
+        # Uniprot accession number search
+        if Uniprot_accession:
+            Uniprot_accession = text_operators.InOperator(values=[Uniprot_accession],
+                                                                attribute="rcsb_polymer_entity_container_identifiers.reference_sequence_identifiers.database_accession")
+
+        # organism search
+        # option: "9606"
+        if organism:  
+            organism = text_operators.InOperator(values=[organism],
+                                                        attribute="rcsb_entity_source_organism.taxonomy_lineage.id")
+
+        # is in certain db
+        # "uniprot"
+        if fromdb:  
+            fromdb = text_operators.ExactMatchOperator(value=fromdb,
+                                                        attribute="rcsb_polymer_entity_container_identifiers.reference_sequence_identifiers.database_name")
+
+        queries = [fromdb, title, organism, Uniprot_accession]
+        queries = [query for query in queries if query is not None]
+        
+        search_operator = QueryGroup(
+            queries=queries,
+            logical_operator=LogicalOperator.AND
+        )
+
+        results = perform_search_with_graph(
+            query_object=search_operator,
+            return_type=ReturnType.ENTRY)
+
+        return results
