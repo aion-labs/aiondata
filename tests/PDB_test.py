@@ -11,6 +11,7 @@ def pdb_handler():
 
 
 def test_get_pdb(pdb_handler):
+    """Test that the PDB files are retrieved."""
     pdb_ids = ["8IRB", "100D"]
     with patch.object(
         pdb_handler.pdb_list, "retrieve_pdb_file"
@@ -25,6 +26,7 @@ def test_get_pdb(pdb_handler):
 
 
 def test_get_pdb_info(pdb_handler):
+    """Test that the information about a PDB file is retrieved."""
     pdb_id = "4OS0"
     with patch.object(pypdb, "get_all_info") as mock_get_all_info:
         pdb_handler.get_pdb_info(pdb_id)
@@ -32,6 +34,7 @@ def test_get_pdb_info(pdb_handler):
 
 
 def test_searchpdb(pdb_handler):
+    """Test that the PDB files are searched for."""
     title = "Solution"
     organism = "9606"
     Uniprot_accession = "P04637"
