@@ -4,7 +4,7 @@ from .protein_structure import (
     FoldswitchProteinsTableS1B,
     FoldswitchProteinsTableS1C,
     CodNas91,
-    PDBDownloader,
+    PDBHandler,
 )
 from .moleculenet import (
     Tox21,
