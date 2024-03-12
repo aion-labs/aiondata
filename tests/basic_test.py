@@ -20,7 +20,7 @@ from aiondata import (
     FoldswitchProteinsTableS1B,
     FoldswitchProteinsTableS1C,
     CodNas91,
-    Weizman3CA,
+    Weizmann3CA,
 )
 
 # List of dataset classes
@@ -43,7 +43,7 @@ datasets = [
     FoldswitchProteinsTableS1B,
     FoldswitchProteinsTableS1C,
     CodNas91,
-    Weizman3CA,
+    Weizmann3CA,
 ]
 
 
