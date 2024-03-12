@@ -8,6 +8,8 @@ from .datasets import ParquetDataset
 
 
 class Weizmann3CA(ParquetDataset):
+    """Curated Cancer Cell Atlas of collected, annotated and analyzed cancer scRNA-seq datasets from the Weizmann Institute of Science."""
+
     COLLECTION = "weizmann_ccca"
     SOURCE = "https://raw.githubusercontent.com/aion-labs/aiondata/main/data/3ca_links.parquet"
 
