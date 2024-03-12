@@ -29,13 +29,14 @@ rdkit = "*"
 tqdm = "*"
 xlsx2csv = "*"
 scipy = "*"
+biopython = "*"
+pypdb = "*"
 numpy = [
     {version = "^1.26.0", python = "^3.12"},
     {version = "^1.25.2", python = "^3.11"},
     {version = "^1.25.2", python = "^3.10"}
 ]
-Bio = "*"
-pypdb = "*"
+
 
 
 [tool.poetry.group.dev.dependencies]
