@@ -126,7 +126,7 @@ class PDBHandler(CachedDataset):
         res = pypdb.get_all_info(pdb_id)
         return res
 
-    def searchpdb(
+    def search_pdb(
         self,
         title=None,
         fromdb=None,

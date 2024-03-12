@@ -33,7 +33,7 @@ def test_get_pdb_info(pdb_handler):
         mock_get_all_info.assert_called_with(pdb_id)
 
 
-def test_searchpdb(pdb_handler):
+def test_search_pdb(pdb_handler):
     """Test that the PDB files are searched for."""
     title = "Solution"
     organism = "9606"
@@ -44,7 +44,7 @@ def test_searchpdb(pdb_handler):
     with patch(
         "aiondata.protein_structure.perform_search_with_graph"
     ) as mock_perform_search_with_graph:
-        pdb_handler.searchpdb(
+        pdb_handler.search_pdb(
             title=title,
             organism=organism,
             Uniprot_accession=Uniprot_accession,
