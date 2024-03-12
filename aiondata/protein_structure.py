@@ -1,8 +1,13 @@
-from .datasets import ExcelDataset, CsvDataset,CachedDataset
+from .datasets import ExcelDataset, CsvDataset, CachedDataset
 from Bio import PDB
-import pypdb 
+import pypdb
 from pypdb.clients.search.operators import text_operators
-from pypdb.clients.search.search_client import QueryGroup, LogicalOperator,ReturnType,perform_search_with_graph
+from pypdb.clients.search.search_client import (
+    QueryGroup,
+    LogicalOperator,
+    ReturnType,
+    perform_search_with_graph,
+)
 
 
 class FoldswitchProteinsTableS1A(ExcelDataset):
@@ -87,7 +92,7 @@ class PDBHandler(CachedDataset):
         self.pdb_list = PDB.PDBList()
         self.save_dir = self.get_cache_path()
 
-    def get_pdb(self, pdb_ids, file_format='pdb'):
+    def get_pdb(self, pdb_ids, file_format="pdb"):
         """
         Retrieves PDB files from the PDB database.
 
@@ -99,11 +104,15 @@ class PDBHandler(CachedDataset):
         - None
         """
         if isinstance(pdb_ids, str):
-            self.pdb_list.retrieve_pdb_file(pdb_id, pdir=self.save_dir, file_format=file_format)
-        else:            
+            self.pdb_list.retrieve_pdb_file(
+                pdb_id, pdir=self.save_dir, file_format=file_format
+            )
+        else:
             for pdb_id in pdb_ids:
-                self.pdb_list.retrieve_pdb_file(pdb_id, pdir=self.save_dir, file_format=file_format)
-        
+                self.pdb_list.retrieve_pdb_file(
+                    pdb_id, pdir=self.save_dir, file_format=file_format
+                )
+
     def get_pdb_info(self, pdb_id):
         """
         Retrieves information about a specific PDB file.
@@ -114,11 +123,18 @@ class PDBHandler(CachedDataset):
         Returns:
         - The information about the PDB file.
         """
-        res=pypdb.get_all_info (pdb_id)
+        res = pypdb.get_all_info(pdb_id)
         return res
-    
-    
-    def searchpdb(self,title=None, fromdb=None, organism=None, Uniprot_accession=None, nonpolymer=None, ComparisonType=None):
+
+    def searchpdb(
+        self,
+        title=None,
+        fromdb=None,
+        organism=None,
+        Uniprot_accession=None,
+        nonpolymer=None,
+        ComparisonType=None,
+    ):
         """
         Perform a search in the Protein Data Bank (PDB) based on the specified criteria.
 
@@ -141,53 +157,63 @@ class PDBHandler(CachedDataset):
         searchpdb(nonpolymer=1,ComparisonType="Less")
 
         """
-        
+
         # title name search
         if title:
-            title = text_operators.ContainsPhraseOperator(value=title,
-                                                        attribute="struct.title")
+            title = text_operators.ContainsPhraseOperator(
+                value=title, attribute="struct.title"
+            )
 
         # Uniprot accession number search
         if Uniprot_accession:
-            Uniprot_accession = text_operators.InOperator(values=[Uniprot_accession],
-                                                                attribute="rcsb_polymer_entity_container_identifiers.reference_sequence_identifiers.database_accession")
+            Uniprot_accession = text_operators.InOperator(
+                values=[Uniprot_accession],
+                attribute="rcsb_polymer_entity_container_identifiers.reference_sequence_identifiers.database_accession",
+            )
 
         # organism search
         # option: "9606"
-        if organism:  
-            organism = text_operators.InOperator(values=[organism],
-                                                        attribute="rcsb_entity_source_organism.taxonomy_lineage.id")
+        if organism:
+            organism = text_operators.InOperator(
+                values=[organism],
+                attribute="rcsb_entity_source_organism.taxonomy_lineage.id",
+            )
 
         # is in certain db
         # "uniprot"
-        if fromdb:  
-            fromdb = text_operators.ExactMatchOperator(value=fromdb,
-                                                        attribute="rcsb_polymer_entity_container_identifiers.reference_sequence_identifiers.database_name")
+        if fromdb:
+            fromdb = text_operators.ExactMatchOperator(
+                value=fromdb,
+                attribute="rcsb_polymer_entity_container_identifiers.reference_sequence_identifiers.database_name",
+            )
 
-        if nonpolymer is not None: 
+        if nonpolymer is not None:
             if ComparisonType not in ["Greater", "Less"]:
-                raise ValueError("ComparisonType must be 'Greater' or 'Less'") 
+                raise ValueError("ComparisonType must be 'Greater' or 'Less'")
             if ComparisonType == "Greater":
-                ComparisonType=text_operators.ComparisonType.GREATER
+                ComparisonType = text_operators.ComparisonType.GREATER
             else:
-                ComparisonType=text_operators.ComparisonType.LESS
-            nonpolymer = text_operators.ComparisonOperator(value=nonpolymer,
-                                                        attribute="rcsb_entry_info.nonpolymer_entity_count",
-                                                        comparison_type=ComparisonType)
+                ComparisonType = text_operators.ComparisonType.LESS
+            nonpolymer = text_operators.ComparisonOperator(
+                value=nonpolymer,
+                attribute="rcsb_entry_info.nonpolymer_entity_count",
+                comparison_type=ComparisonType,
+            )
 
         queries = [fromdb, title, organism, Uniprot_accession, nonpolymer]
         queries = [query for query in queries if query is not None]
-        
-        if len(queries)>1:
+
+        if len(queries) > 1:
             search_operator = QueryGroup(
-                queries=queries,
-                logical_operator=LogicalOperator.AND
+                queries=queries, logical_operator=LogicalOperator.AND
             )
         else:
             search_operator = queries[0]
-            
+
         results = perform_search_with_graph(
-            query_object=search_operator,
-            return_type=ReturnType.ENTRY)
+            query_object=search_operator, return_type=ReturnType.ENTRY
+        )
+
+        print("foo")
 
         return results
