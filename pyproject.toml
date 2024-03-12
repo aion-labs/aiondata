@@ -37,8 +37,6 @@ numpy = [
     {version = "^1.25.2", python = "^3.10"}
 ]
 
-
-
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.2"
 iprogress = "^0.4"
