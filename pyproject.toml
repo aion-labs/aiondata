@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aiondata"
-version = "0.2.1"
+version = "0.3.0"
 description = "A common data access layer for AI-driven drug discovery."
 authors = ["JJ Ben-Joseph <jj@tensorspace.ai>"]
 license = "Apache"
@@ -28,6 +28,7 @@ polars = {version = "*", python = ">=3.10"}
 rdkit = "*"
 tqdm = "*"
 xlsx2csv = "*"
+scipy = "*"
 numpy = [
     {version = "^1.26.0", python = "^3.12"},
     {version = "^1.25.2", python = "^3.11"},

@@ -22,3 +22,5 @@ from .moleculenet import (
     SIDER,
     ClinTox,
 )
+
+from .weizmann_ccca import Weizmann3CA

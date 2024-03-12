@@ -44,6 +44,8 @@ AionData provides access to the following datasets:
 
 - **CodNas91**: A dataset curated from the paper [Impact of protein conformational diversity on AlphaFold predictions](https://pubmed.ncbi.nlm.nih.gov/35561203/), featuring 91 proteins with varying degrees of conformational diversity. This dataset focuses on apo–holo pairs selected for their significant structural changes associated with biological processes.
 
+- **Weizmann 3CA**: Curated Cancer Cell Atlas of collected, annotated and analyzed cancer scRNA-seq datasets from the Weizmann Institute of Science.
+
 
 License
 -------

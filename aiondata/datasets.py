@@ -54,6 +54,13 @@ class ExcelDataset(CachedDataset):
         return pl.read_excel(self.SOURCE)
 
 
+class ParquetDataset(CachedDataset):
+    """A base class for datasets that are stored in Apache Parquet format."""
+
+    def get_df(self) -> pl.DataFrame:
+        return pl.read_parquet(self.SOURCE)
+
+
 class GeneratedDataset(CachedDataset):
     """A base class for datasets that are generated on-the-fly."""
 
