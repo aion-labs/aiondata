@@ -7,7 +7,7 @@ from scipy.io import mmread
 from .datasets import ParquetDataset
 
 
-class Weizman3CA(ParquetDataset):
+class Weizmann3CA(ParquetDataset):
     COLLECTION = "weizmann_ccca"
     SOURCE = "https://raw.githubusercontent.com/aion-labs/aiondata/main/data/3ca_links.parquet"
 

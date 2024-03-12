@@ -22,4 +22,4 @@ from .moleculenet import (
     ClinTox,
 )
 
-from .weizmann_ccca import Weizman3CA
+from .weizmann_ccca import Weizmann3CA
