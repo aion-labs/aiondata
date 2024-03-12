@@ -36,6 +36,8 @@ AionData provides access to the following datasets:
     - **SIDER**: Contains information on marketed medicines and their recorded adverse drug reactions, for side effects prediction.
     - **ClinTox**: Compares drugs approved by the FDA and those that failed clinical trials for toxicity reasons, for binary classification and toxicity prediction.
 
+- **PDB (Protein Data Bank)**: A comprehensive, publicly available repository of 3D structural data of biological molecules. This dataset includes atomic coordinates, biological macromolecules, and complex assemblies, which are essential for understanding molecular function and designing pharmaceuticals.
+
 - **Foldswitch Proteins**: Datasets from the paper [AlphaFold2 fails to predict protein fold switching](https://pubmed.ncbi.nlm.nih.gov/35634782/) featuring information on fold-switching proteins. These datasets provide insights into the structural dynamics and functional versatility of proteins, highlighting cases where AlphaFold2's predictive capabilities are challenged.
 
     - **Table S1A**: Lists pairs of proteins (PDBIDs), their lengths, and the sequence of the fold-switching region. For some pairs, only the first fold's PDBID is available if the second fold has not been solved.
