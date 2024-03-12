@@ -1,4 +1,3 @@
-# Import necessary modules
 import pytest
 from unittest.mock import patch
 import pypdb

@@ -214,6 +214,4 @@ class PDBHandler(CachedDataset):
             query_object=search_operator, return_type=ReturnType.ENTRY
         )
 
-        print("foo")
-
         return results
