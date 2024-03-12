@@ -34,6 +34,9 @@ numpy = [
     {version = "^1.25.2", python = "^3.11"},
     {version = "^1.25.2", python = "^3.10"}
 ]
+Bio = "*"
+pypdb = "*"
+
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.2"
