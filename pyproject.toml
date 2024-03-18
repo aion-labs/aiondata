@@ -38,8 +38,10 @@ numpy = [
 ]
 
 [tool.poetry.group.dev.dependencies]
-ipykernel = "^6.29.2"
-iprogress = "^0.4"
+ipykernel = "*"
+iprogress = "*"
+ipywidgets = "*"
+scikit-learn = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
