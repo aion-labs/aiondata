@@ -84,8 +84,9 @@ class Weizmann3CA(ParquetDataset):
             raise ValueError("exp_data must be a scipy sparse matrix.")
 
         cell_names = cells["cell_name"].to_list()
+        cell_types = cells["cell_type"].to_list()
 
-        for col_idx, cell_name in enumerate(cell_names):
+        for col_idx, (cell_name, cell_type) in enumerate(zip(cell_names, cell_types)):
             cell_data = (
                 exp_data_csc[:, col_idx].toarray().ravel()
             )  # Get expression values for the current cell
@@ -97,7 +98,11 @@ class Weizmann3CA(ParquetDataset):
 
             if gene_expression_dict:
                 # Prepend the cell name to the dictionary
-                cell_gene_expression = {"cell_name": cell_name, **gene_expression_dict}
+                cell_gene_expression = {
+                    "_cell_name": cell_name,
+                    "_cell_type": cell_type,
+                    **gene_expression_dict,
+                }
                 cell_gene_expression_dicts.append(cell_gene_expression)
 
         return cell_gene_expression_dicts
