@@ -5,6 +5,8 @@ from typing import Tuple
 import warnings
 import polars as pl
 from scipy.io import mmread
+from scipy.sparse import issparse, coo_matrix
+import numpy as np
 
 from .datasets import ParquetDataset
 
@@ -17,7 +19,7 @@ class Weizmann3CA(ParquetDataset):
 
     def __getitem__(
         self, study_name_to_find: str
-    ) -> Tuple[pl.DataFrame, list, pl.DataFrame, "NDArray[Any]"]:
+    ) -> Tuple[pl.DataFrame, list, pl.DataFrame, coo_matrix]:
         """
         Retrieve data for a specific study name.
 
@@ -60,6 +62,45 @@ class Weizmann3CA(ParquetDataset):
                 exp_data = self._load_mtx_from_zip(zip_file, matrix_file_name)
 
         return cells, genes, metadata, exp_data
+
+    def get_gene_expression_by_cell(self, study_name: str) -> list:
+        """
+        Retrieves the gene expression data for each cell in a given study.
+
+        Args:
+            study_name (str): The name of the study.
+
+        Returns:
+            list: A list of dictionaries, where each dictionary represents the gene expression data for a cell.
+                  Each dictionary contains the cell name as well as the gene expression values for that cell.
+        """
+        cells, genes, _, exp_data = self[study_name]
+
+        cell_gene_expression_dicts = []
+
+        if issparse(exp_data):
+            exp_data_csc = exp_data.tocsc()  # Ensure it's in a column-suitable format
+        else:
+            raise ValueError("exp_data must be a scipy sparse matrix.")
+
+        cell_names = cells["cell_name"].to_list()
+
+        for col_idx, cell_name in enumerate(cell_names):
+            cell_data = (
+                exp_data_csc[:, col_idx].toarray().ravel()
+            )  # Get expression values for the current cell
+            gene_expression_dict = {
+                genes[row_idx]: cell_data[row_idx]
+                for row_idx in range(len(genes))
+                if cell_data[row_idx] != 0
+            }
+
+            if gene_expression_dict:
+                # Prepend the cell name to the dictionary
+                cell_gene_expression = {"cell_name": cell_name, **gene_expression_dict}
+                cell_gene_expression_dicts.append(cell_gene_expression)
+
+        return cell_gene_expression_dicts
 
     def _download_or_cache(self, study_name: str, data_url: str) -> "os.PathLike":
         filename = study_name.replace(" ", "_") + ".zip"
