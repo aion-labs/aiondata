@@ -1,5 +1,5 @@
 import io
-from typing import Optional
+from typing import Optional, Generator, Union
 import urllib.request
 from rdkit import Chem
 from rdkit import RDLogger
@@ -39,7 +39,7 @@ class BindingDB(GeneratedDataset):
             self.fd = fd
 
     @staticmethod
-    def _convert_to_numeric(prop_name: str, value: str):
+    def _convert_to_numeric(prop_name: str, value: str) -> Union[int, float, str, None]:
         """
         Converts a property value to numeric type.
 
@@ -115,7 +115,7 @@ class BindingDB(GeneratedDataset):
             file_content = io.BytesIO(f.read())
         return BindingDB(file_content)
 
-    def to_generator(self, progress_bar: bool = True):
+    def to_generator(self, progress_bar: bool = True) -> Generator[dict, None, None]:
         """
         Converts the dataset to a generator.
 
