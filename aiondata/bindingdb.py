@@ -132,7 +132,7 @@ class BindingDB(GeneratedDataset):
         if cached_sdf.exists():
             self.fd = self.from_compressed_file(cached_sdf)
 
-        if self.fd is None:
+        if getattr(self, "fd", None) is None:
             self.fd = self.from_url(self.SOURCE)
 
         sd = Chem.ForwardSDMolSupplier(self.fd, sanitize=False, removeHs=False)
