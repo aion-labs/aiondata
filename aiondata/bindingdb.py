@@ -131,7 +131,7 @@ class BindingDB(GeneratedDataset):
         """
         RDLogger.DisableLog("rdApp.*")  # Suppress RDKit warnings and errors
 
-        sd = Chem.ForwardSDMolSupplier(self.fd, sanitize=False, removeHs=False)
+        sd = Chem.ForwardSDMolSupplier(self.fd, sanitize=True, removeHs=False)
 
         if progress_bar:
             pb = tqdm
