@@ -131,8 +131,6 @@ class BindingDB(GeneratedDataset):
         """
         RDLogger.DisableLog("rdApp.*")  # Suppress RDKit warnings and errors
 
-        sd = Chem.ForwardSDMolSupplier(self.fd, sanitize=True, removeHs=False)
-
         if progress_bar:
             pb = tqdm
         else:
@@ -140,22 +138,23 @@ class BindingDB(GeneratedDataset):
             def pb(x, **kwargs):
                 return x
 
-        for mol in pb(sd, desc="Parsing BindingDB", unit=" molecules"):
-            if mol is not None:
-                record = {
-                    prop: self._convert_to_numeric(prop, mol.GetProp(prop))
-                    for prop in mol.GetPropNames()
-                    if mol.HasProp(prop)
-                }
+        with Chem.ForwardSDMolSupplier(self.fd, sanitize=True, removeHs=False) as sd:
+            for mol in pb(sd, desc="Parsing BindingDB", unit=" molecules"):
+                if mol is not None:
+                    record = {
+                        prop: self._convert_to_numeric(prop, mol.GetProp(prop))
+                        for prop in mol.GetPropNames()
+                        if mol.HasProp(prop)
+                    }
 
-                # Normalize PubChem SID and CID fields that are sometimes present in the SDF
-                if "PubChem SID" in record:
-                    record["PubChem SID of Ligand"] = record.pop("PubChem SID")
-                if "PubChem CID" in record:
-                    record["PubChem CID of Ligand"] = record.pop("PubChem CID")
+                    # Normalize PubChem SID and CID fields that are sometimes present in the SDF
+                    if "PubChem SID" in record:
+                        record["PubChem SID of Ligand"] = record.pop("PubChem SID")
+                    if "PubChem CID" in record:
+                        record["PubChem CID of Ligand"] = record.pop("PubChem CID")
 
-                record["SMILES"] = Chem.MolToSmiles(mol)
-                yield record
+                    record["SMILES"] = Chem.MolToSmiles(mol)
+                    yield record
 
         # Re-enable logging
         RDLogger.EnableLog("rdApp.error")
