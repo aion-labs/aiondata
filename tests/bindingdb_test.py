@@ -36,7 +36,7 @@ def test_dataframe_no_cache(mock_write_parquet, mock_exists, mock_mkdir):
     """Test that a DataFrame is created and cached."""
     mock_exists.return_value = False
 
-    df = BindingDB(mock_sdf_path).to_df()
+    df = BindingDB.from_uncompressed_file(mock_sdf_path).to_df()
 
     assert isinstance(df, pl.DataFrame), "DataFrame not created."
     assert df.height > 0, "DataFrame is empty."
@@ -57,7 +57,7 @@ def test_dataframe_creation_from_cache(
     mock_df = pl.DataFrame({"SMILES": ["C"], "Ki (nM)": [1.0]})
     mock_read_parquet.return_value = mock_df
 
-    df = BindingDB(mock_sdf_path).to_df()
+    df = BindingDB.from_uncompressed_file(mock_sdf_path).to_df()
 
     assert isinstance(df, pl.DataFrame), "DataFrame not created from cache."
     assert df.height > 0, "DataFrame is empty."

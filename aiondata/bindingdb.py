@@ -35,7 +35,13 @@ class BindingDB(GeneratedDataset):
             fd (Optional[io.BytesIO]): The file-like object containing the dataset content.
                 If `fd` is not provided, the dataset content will be fetched from the default source.
         """
-        if fd is not None:
+        if fd is None:
+            cached_sdf = self.get_cache_path().parent / "BindingDB.sdf.zip"
+            if cached_sdf.exists():
+                self.fd = self.from_compressed_file(cached_sdf)
+            else:
+                self.fd = self.from_url(self.SOURCE)
+        else:
             self.fd = fd
 
     @staticmethod
@@ -126,14 +132,6 @@ class BindingDB(GeneratedDataset):
             dict: A dictionary representing a record in the dataset.
         """
         RDLogger.DisableLog("rdApp.*")  # Suppress RDKit warnings and errors
-
-        cached_sdf = self.get_cache_path().parent / "BindingDB.sdf.zip"
-
-        if cached_sdf.exists():
-            self.fd = self.from_compressed_file(cached_sdf)
-
-        if getattr(self, "fd", None) is None:
-            self.fd = self.from_url(self.SOURCE)
 
         sd = Chem.ForwardSDMolSupplier(self.fd, sanitize=False, removeHs=False)
 
