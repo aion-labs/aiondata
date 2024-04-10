@@ -27,12 +27,12 @@ class BindingDB(GeneratedDataset):
         "koff (s-1)",
     }
 
-    def __init__(self, fd: Optional[io.BytesIO] = None):
+    def __init__(self, fd: Optional[io.BufferedReader] = None):
         """
         Initializes a BindingDB instance.
 
         Args:
-            fd (Optional[io.BytesIO]): The file-like object containing the dataset content.
+            fd (Optional[io.BufferedReader]): The file-like object containing the dataset content.
                 If `fd` is not provided, the dataset content will be fetched from the default source.
         """
         if fd is None:
@@ -74,7 +74,7 @@ class BindingDB(GeneratedDataset):
     @staticmethod
     def from_url(url: str) -> "BindingDB":
         """
-        Creates a BindingDB instance from a URL containing a compressed SDF file (typically upstream).
+        Creates a BindingDB instance from a URL containing a compressed SDF file, using streaming.
 
         Args:
             url (str): The URL of the dataset.
@@ -86,7 +86,7 @@ class BindingDB(GeneratedDataset):
             with zipfile.ZipFile(io.BytesIO(response.read())) as z:
                 sdf_name = z.namelist()[0]
                 with z.open(sdf_name) as sdf_file:
-                    sdf_content = io.BytesIO(sdf_file.read())
+                    sdf_content = io.BufferedReader(sdf_file)
         return BindingDB(sdf_content)
 
     @staticmethod
@@ -103,7 +103,7 @@ class BindingDB(GeneratedDataset):
         with zipfile.ZipFile(file_path) as z:
             sdf_name = z.namelist()[0]
             with z.open(sdf_name) as sdf_file:
-                sdf_content = io.BytesIO(sdf_file.read())
+                sdf_content = io.BufferedReader(sdf_file)
         return BindingDB(sdf_content)
 
     @staticmethod
@@ -117,9 +117,7 @@ class BindingDB(GeneratedDataset):
         Returns:
             A BindingDB instance.
         """
-        with open(file_path, "rb") as f:
-            file_content = io.BytesIO(f.read())
-        return BindingDB(file_content)
+        return BindingDB(open(file_path, "rb"))
 
     def to_generator(self, progress_bar: bool = True) -> Generator[dict, None, None]:
         """
@@ -142,7 +140,7 @@ class BindingDB(GeneratedDataset):
             def pb(x, **kwargs):
                 return x
 
-        for mol in pb(sd, desc="Parsing BindingDB", unit=" molecule"):
+        for mol in pb(sd, desc="Parsing BindingDB", unit=" molecules"):
             if mol is not None:
                 record = {
                     prop: self._convert_to_numeric(prop, mol.GetProp(prop))
