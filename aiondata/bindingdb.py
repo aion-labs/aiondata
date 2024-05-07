@@ -156,8 +156,6 @@ class BindingDB(GeneratedDataset):
 
                     record["SMILES"] = Chem.MolToSmiles(mol)
                     yield record
-                else:
-                    break
 
         # Re-enable logging
         RDLogger.EnableLog("rdApp.error")
