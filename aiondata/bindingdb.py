@@ -73,7 +73,7 @@ class BindingDB(GeneratedDataset):
                 return value
 
     @staticmethod
-    def from_url(url: str) -> "BindingDB":
+    def from_url(url: str) -> io.BufferedReader:
         """
         Creates a BindingDB instance from a URL containing a compressed SDF file, using streaming.
 
@@ -81,17 +81,17 @@ class BindingDB(GeneratedDataset):
             url (str): The URL of the dataset.
 
         Returns:
-            A BindingDB instance.
+            A BufferedReader instance containing the content of the SDF file.
         """
         with urllib.request.urlopen(url) as response:
             with zipfile.ZipFile(io.BytesIO(response.read())) as z:
                 sdf_name = z.namelist()[0]
                 with z.open(sdf_name) as sdf_file:
                     sdf_content = io.BufferedReader(sdf_file)
-        return BindingDB(sdf_content)
+        return sdf_content
 
     @staticmethod
-    def from_compressed_file(file_path: str) -> "BindingDB":
+    def from_compressed_file(file_path: str) -> io.BufferedReader:
         """
         Creates a BindingDB instance from a compressed SDF file.
 
@@ -99,16 +99,16 @@ class BindingDB(GeneratedDataset):
             file_path (str): The path to the compressed file.
 
         Returns:
-            A BindingDB instance.
+            A BufferedReader instance containing the content of the SDF file.
         """
         with zipfile.ZipFile(file_path) as z:
             sdf_name = z.namelist()[0]
             with z.open(sdf_name) as sdf_file:
                 sdf_content = io.BufferedReader(sdf_file)
-        return BindingDB(sdf_content)
+        return sdf_content
 
     @staticmethod
-    def from_uncompressed_file(file_path: str) -> "BindingDB":
+    def from_uncompressed_file(file_path: str) -> io.BufferedReader:
         """
         Creates a BindingDB instance from an uncompressed SDF file.
 
@@ -116,9 +116,9 @@ class BindingDB(GeneratedDataset):
             file_path (str): The path to the uncompressed file.
 
         Returns:
-            A BindingDB instance.
+            A BufferedReader instance containing the content of the SDF file.
         """
-        return BindingDB(open(file_path, "rb"))
+        return open(file_path, "rb")
 
     def to_generator(self, progress_bar: bool = True) -> Generator[dict, None, None]:
         """

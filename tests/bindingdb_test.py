@@ -10,7 +10,7 @@ mock_sdf_path = current_file_dir / "mock.sdf"
 
 def test_sdf_to_generator():
     """Test that the generator yields records with expected structure."""
-    bindingdb = BindingDB.from_uncompressed_file(mock_sdf_path)
+    bindingdb = BindingDB(BindingDB.from_uncompressed_file(mock_sdf_path))
 
     records = list(bindingdb.to_generator())
     assert len(records) > 0, "No records generated."
@@ -20,7 +20,9 @@ def test_sdf_to_generator():
 
 def test_numeric_conversion():
     """Test that numeric fields are correctly converted."""
-    records = list(BindingDB(mock_sdf_path).to_generator())
+    records = list(
+        BindingDB(BindingDB.from_uncompressed_file(mock_sdf_path)).to_generator()
+    )
     for record in records:
         for key, value in record.items():
             if key in BindingDB.float_fields:
@@ -36,7 +38,7 @@ def test_dataframe_no_cache(mock_write_parquet, mock_exists, mock_mkdir):
     """Test that a DataFrame is created and cached."""
     mock_exists.return_value = False
 
-    df = BindingDB.from_uncompressed_file(mock_sdf_path).to_df()
+    df = BindingDB(BindingDB.from_uncompressed_file(mock_sdf_path)).to_df()
 
     assert isinstance(df, pl.DataFrame), "DataFrame not created."
     assert df.height > 0, "DataFrame is empty."
@@ -57,7 +59,7 @@ def test_dataframe_creation_from_cache(
     mock_df = pl.DataFrame({"SMILES": ["C"], "Ki (nM)": [1.0]})
     mock_read_parquet.return_value = mock_df
 
-    df = BindingDB.from_uncompressed_file(mock_sdf_path).to_df()
+    df = BindingDB(BindingDB.from_uncompressed_file(mock_sdf_path)).to_df()
 
     assert isinstance(df, pl.DataFrame), "DataFrame not created from cache."
     assert df.height > 0, "DataFrame is empty."
