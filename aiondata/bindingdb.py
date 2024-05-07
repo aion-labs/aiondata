@@ -44,8 +44,9 @@ class BindingDB(GeneratedDataset):
         else:
             self.fd = fd
 
-    @staticmethod
-    def _convert_to_numeric(prop_name: str, value: str) -> Union[int, float, str, None]:
+    def _convert_to_numeric(
+        self, prop_name: str, value: str
+    ) -> Union[int, float, str, None]:
         """
         Converts a property value to numeric type.
 
