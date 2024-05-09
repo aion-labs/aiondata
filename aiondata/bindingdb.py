@@ -156,7 +156,8 @@ class BindingDB(GeneratedDataset):
                     yield record
 
         self.fd.close()
-        self.outer_fd.close()
+        if self.outer_fd is not None:
+            self.outer_fd.close()
 
         # Re-enable logging
         RDLogger.EnableLog("rdApp.error")
