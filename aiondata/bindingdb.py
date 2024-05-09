@@ -1,5 +1,5 @@
 import io
-from typing import Optional, Generator, Union
+from typing import Optional, Generator, Union, Tuple
 import urllib.request
 from rdkit import Chem
 from rdkit import RDLogger
@@ -38,11 +38,11 @@ class BindingDB(GeneratedDataset):
         if fd is None:
             cached_sdf = self.get_cache_path().parent / "BindingDB.sdf.zip"
             if cached_sdf.exists():
-                self.fd = self.from_compressed_file(cached_sdf)
+                self.outer_fd, self.fd = self.from_compressed_file(cached_sdf)
             else:
-                self.fd = self.from_url(self.SOURCE)
+                self.outer_fd, self.fd = self.from_url(self.SOURCE)
         else:
-            self.fd = fd
+            self.outer_fd, self.fd = fd
 
     def _convert_to_numeric(
         self, prop_name: str, value: str
@@ -73,7 +73,7 @@ class BindingDB(GeneratedDataset):
                 return value
 
     @staticmethod
-    def from_url(url: str) -> io.BufferedReader:
+    def from_url(url: str) -> Tuple[zipfile.ZipFile, io.BufferedReader]:
         """
         Creates a BindingDB instance from a URL containing a compressed SDF file, using streaming.
 
@@ -81,17 +81,15 @@ class BindingDB(GeneratedDataset):
             url (str): The URL of the dataset.
 
         Returns:
-            A BufferedReader instance containing the content of the SDF file.
+            A tuple containing the ZipFile instance and a BufferedReader instance containing the content of the SDF file.
         """
-        with urllib.request.urlopen(url) as response:
-            with zipfile.ZipFile(io.BytesIO(response.read())) as z:
-                sdf_name = z.namelist()[0]
-                with z.open(sdf_name) as sdf_file:
-                    sdf_content = io.BufferedReader(sdf_file)
-        return sdf_content
+        response = urllib.request.urlopen(url)
+        return BindingDB.from_compressed_file(io.BytesIO(response.read()))
 
     @staticmethod
-    def from_compressed_file(file_path: str) -> io.BufferedReader:
+    def from_compressed_file(
+        file_path: str,
+    ) -> Tuple[zipfile.ZipFile, io.BufferedReader]:
         """
         Creates a BindingDB instance from a compressed SDF file.
 
@@ -99,13 +97,13 @@ class BindingDB(GeneratedDataset):
             file_path (str): The path to the compressed file.
 
         Returns:
-            A BufferedReader instance containing the content of the SDF file.
+            A tuple containing the ZipFile instance and a BufferedReader instance containing the content of the SDF file.
         """
-        with zipfile.ZipFile(file_path) as z:
-            sdf_name = z.namelist()[0]
-            with z.open(sdf_name) as sdf_file:
-                sdf_content = io.BufferedReader(sdf_file)
-        return sdf_content
+        zip_file = zipfile.ZipFile(file_path)
+        sdf_name = zip_file.namelist()[0]
+        sdf_file = zip_file.open(sdf_name)
+        sdf_content = io.BufferedReader(sdf_file)
+        return zip_file, sdf_content
 
     @staticmethod
     def from_uncompressed_file(file_path: str) -> io.BufferedReader:
@@ -118,7 +116,7 @@ class BindingDB(GeneratedDataset):
         Returns:
             A BufferedReader instance containing the content of the SDF file.
         """
-        return open(file_path, "rb")
+        return None, open(file_path, "rb")
 
     def to_generator(self, progress_bar: bool = True) -> Generator[dict, None, None]:
         """
@@ -156,6 +154,9 @@ class BindingDB(GeneratedDataset):
 
                     record["SMILES"] = Chem.MolToSmiles(mol)
                     yield record
+
+        self.fd.close()
+        self.outer_fd.close()
 
         # Re-enable logging
         RDLogger.EnableLog("rdApp.error")
