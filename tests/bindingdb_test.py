@@ -23,9 +23,14 @@ def test_numeric_conversion():
     records = list(
         BindingDB(BindingDB.from_uncompressed_file(mock_sdf_path)).to_generator()
     )
+    float_fields = {
+        name
+        for name, dtype in BindingDB.SCHEMA
+        if isinstance(dtype, (pl.Float64, pl.Float32))
+    }
     for record in records:
         for key, value in record.items():
-            if key in BindingDB.float_fields:
+            if key in float_fields:
                 assert (
                     isinstance(value, float) or value is None
                 ), f"Field {key} is not a float or None."
