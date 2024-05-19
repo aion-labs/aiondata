@@ -1,4 +1,3 @@
-from collections import OrderedDict
 import io
 from typing import Optional, Generator, Union, Tuple
 import urllib.request
@@ -7,7 +6,7 @@ from rdkit import RDLogger
 from tqdm.auto import tqdm
 import zipfile
 
-from .datasets import GeneratedDataset
+from .datasets import GeneratedDataset, CachedDataset
 import polars as pl
 
 
@@ -232,3 +231,30 @@ class BindingDB(GeneratedDataset):
         # Re-enable logging
         RDLogger.EnableLog("rdApp.error")
         RDLogger.EnableLog("rdApp.warning")
+
+
+class BindingAffinity(CachedDataset):
+    def __init__(self, fd: Optional[io.BufferedReader] = None):
+        """
+        Initializes a BindingAffinity instance.
+
+        Args:
+            fd (Optional[io.BufferedReader]): The file-like object containing the BindingDB content.
+                If `fd` is not provided, the dataset content will be fetched from the default source.
+        """
+        self.bindingdb = BindingDB(fd)
+
+    def get_df(self) -> pl.DataFrame:
+        bdb_df = self.bindingdb.to_df()
+        return bdb_df.select(
+            [
+                "SMILES",
+                "BindingDB Target Chain Sequence",
+                "Ki (nM)",
+                "IC50 (nM)",
+                "Kd (nM)",
+                "EC50 (nM)",
+                "kon (M-1-s-1)",
+                "koff (s-1)",
+            ]
+        )

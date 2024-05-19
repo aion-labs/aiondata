@@ -1,4 +1,4 @@
-from .bindingdb import BindingDB
+from .bindingdb import BindingDB, BindingAffinity
 from .protein_structure import (
     FoldswitchProteinsTableS1A,
     FoldswitchProteinsTableS1B,
