@@ -246,7 +246,7 @@ class BindingAffinity(CachedDataset):
 
     def get_df(self) -> pl.DataFrame:
         bdb_df = self.bindingdb.to_df()
-        return bdb_df.select(
+        ba_df = bdb_df.select(
             [
                 "SMILES",
                 "BindingDB Target Chain Sequence",
@@ -258,3 +258,9 @@ class BindingAffinity(CachedDataset):
                 "koff (s-1)",
             ]
         )
+        ba_df = ba_df.rename({"BindingDB Target Chain Sequence": "Sequence"})
+
+        # Remove spaces from BindingDB Target Chain Sequence column
+        ba_df = ba_df.with_columns(pl.col("Sequence").str.replace_all(" ", ""))
+
+        return ba_df
