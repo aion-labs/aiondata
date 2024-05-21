@@ -260,7 +260,9 @@ class BindingAffinity(CachedDataset):
         ba_df = ba_df.rename({"BindingDB Target Chain Sequence": "Sequence"})
 
         # Filter out rows with Sequences that are not valid
-        df = df.filter(pl.col("Sequence").str.contains("^[ACDEFGHIKLMNPQRSTVWY]+$"))
+        ba_df = ba_df.filter(
+            pl.col("Sequence").str.contains("^[ACDEFGHIKLMNPQRSTVWY]+$")
+        )
 
         # Remove spaces from BindingDB Target Chain Sequence column
         ba_df = ba_df.with_columns(pl.col("Sequence").str.replace_all(" ", ""))
