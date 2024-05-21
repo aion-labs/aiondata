@@ -1,8 +1,7 @@
 import io
 from typing import Optional, Generator, Union, Tuple
 import urllib.request
-from rdkit import Chem
-from rdkit import RDLogger
+from rdkit import Chem, RDLogger
 from tqdm.auto import tqdm
 import zipfile
 
