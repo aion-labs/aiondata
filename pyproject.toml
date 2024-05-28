@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aiondata"
-version = "0.5.0"
+version = "0.5.1"
 description = "A common data access layer for AI-driven drug discovery."
 authors = ["JJ Ben-Joseph <jj@tensorspace.ai>"]
 license = "Apache"
