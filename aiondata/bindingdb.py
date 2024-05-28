@@ -255,6 +255,8 @@ class BindingAffinity(CachedDataset):
                 "EC50 (nM)",
                 "kon (M-1-s-1)",
                 "koff (s-1)",
+                "pH",
+                "Temp C",
             ]
         )
         ba_df = ba_df.rename({"BindingDB Target Chain Sequence": "Sequence"})
