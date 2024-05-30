@@ -253,13 +253,17 @@ class BindingAffinity(CachedDataset):
                 "IC50 (nM)",
                 "Kd (nM)",
                 "EC50 (nM)",
-                "kon (M-1-s-1)",
-                "koff (s-1)",
                 "pH",
                 "Temp C",
+                "Target Source Organism According to Curator or DataSource",
             ]
         )
-        ba_df = ba_df.rename({"BindingDB Target Chain Sequence": "Sequence"})
+        ba_df = ba_df.rename(
+            {
+                "BindingDB Target Chain Sequence": "Sequence",
+                "Target Source Organism According to Curator or DataSource": "Organism",
+            }
+        )
 
         # Filter out rows with Sequences that are not valid
         ba_df = ba_df.filter(
