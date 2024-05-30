@@ -24,7 +24,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.10"
-polars = {version = "*", python = ">=3.10"}
+polars = {version = ">=0.20.30", python = ">=3.10"}
 rdkit = "*"
 tqdm = "*"
 xlsx2csv = "*"
