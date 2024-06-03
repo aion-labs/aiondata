@@ -256,12 +256,14 @@ class BindingAffinity(CachedDataset):
                 "pH",
                 "Temp C",
                 "Target Source Organism According to Curator or DataSource",
+                "Curation/DataSource",
             ]
         )
         ba_df = ba_df.rename(
             {
                 "BindingDB Target Chain Sequence": "Sequence",
                 "Target Source Organism According to Curator or DataSource": "Organism",
+                "Curation/DataSource": "Source",
             }
         )
 
