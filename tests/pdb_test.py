@@ -41,7 +41,7 @@ def test_search_pdb(pdb_handler):
     nonpolymer = 1
     ComparisonType = "Less"
     with patch(
-        "aiondata.protein_structure.perform_search_with_graph"
+        "aiondata.raw.protein_structure.perform_search_with_graph"
     ) as mock_perform_search_with_graph:
         pdb_handler.search_pdb(
             title=title,

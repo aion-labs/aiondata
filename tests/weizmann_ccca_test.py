@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 import polars as pl
 
-from aiondata.weizmann_ccca import Weizmann3CA
+from aiondata import Weizmann3CA
 
 
 @patch("polars.read_parquet")

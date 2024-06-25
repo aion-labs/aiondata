@@ -8,7 +8,7 @@ from scipy.io import mmread
 from scipy.sparse import issparse, coo_matrix
 import numpy as np
 
-from .datasets import ParquetDataset
+from ..datasets import ParquetDataset
 
 
 class Weizmann3CA(ParquetDataset):
