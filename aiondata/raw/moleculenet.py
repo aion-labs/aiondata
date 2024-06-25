@@ -1,4 +1,4 @@
-from .datasets import CsvDataset
+from ..datasets import CsvDataset
 
 
 class MoleculeNet(CsvDataset):

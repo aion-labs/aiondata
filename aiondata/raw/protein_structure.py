@@ -1,4 +1,4 @@
-from .datasets import ExcelDataset, CsvDataset, CachedDataset
+from ..datasets import ExcelDataset, CsvDataset, CachedDataset
 from Bio import PDB
 import pypdb
 from pypdb.clients.search.operators import text_operators
@@ -154,8 +154,8 @@ class PDBHandler(CachedDataset):
             ValueError: If ComparisonType is not 'Greater' or 'Less' when nonpolymer is provided.
 
         Examples:
-        searchpdb(Uniprot_accession="P04637",title="Solution",organism="9606",fromdb="UniProt")
-        searchpdb(nonpolymer=1,ComparisonType="Less")
+        search_pdb(Uniprot_accession="P04637",title="Solution",organism="9606",fromdb="UniProt")
+        search_pdb(nonpolymer=1,ComparisonType="Less")
 
         """
 
@@ -212,7 +212,7 @@ class PDBHandler(CachedDataset):
             search_operator = queries[0]
 
         results = perform_search_with_graph(
-            query_object=search_operator, return_type=ReturnType.ENTRY
+            query_object=search_operator, return_type=ReturnType.ENTRY, verbosity=True
         )
 
         return results

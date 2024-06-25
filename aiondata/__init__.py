@@ -1,12 +1,12 @@
-from .bindingdb import BindingDB, BindingAffinity
-from .protein_structure import (
+from .raw.bindingdb import BindingDB
+from .raw.protein_structure import (
     FoldswitchProteinsTableS1A,
     FoldswitchProteinsTableS1B,
     FoldswitchProteinsTableS1C,
     CodNas91,
     PDBHandler,
 )
-from .moleculenet import (
+from .raw.moleculenet import (
     Tox21,
     ToxCast,
     ESOL,
@@ -23,4 +23,6 @@ from .moleculenet import (
     ClinTox,
 )
 
-from .weizmann_ccca import Weizmann3CA
+from .raw.weizmann_ccca import Weizmann3CA
+
+from .processed.bindingaffinity import BindingAffinity
