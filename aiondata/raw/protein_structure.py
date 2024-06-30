@@ -216,8 +216,6 @@ class PDBHandler(CachedDataset):
         )
 
         return results
-    
-    
 
     def fetch_PDB_uniprot_accession(pdb_id):
         """
@@ -295,4 +293,3 @@ class PDBHandler(CachedDataset):
             print(f"Failed to fetch sequence. Status code: {response.status_code}")
             print(response.text)
             return None
-
