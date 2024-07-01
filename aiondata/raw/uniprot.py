@@ -81,14 +81,27 @@ class UniProt(GeneratedDataset):
         with urllib.request.urlopen(self.source) as response:
             with gzip.open(BytesIO(response.read()), "rt") as file:
                 entry = {}
+                sequence_mode = False
+                sequence_lines = []
                 for line in file:
                     if line.startswith("//"):  # End of an entry
+                        if (
+                            sequence_lines
+                        ):  # Ensure the sequence is concatenated if it exists
+                            entry["SQ"] = "".join(sequence_lines).replace(" ", "")
                         human_readable_entry = {
                             self.uni_prot_key_descriptions.get(key, key): value
                             for key, value in entry.items()
                         }
                         yield human_readable_entry
                         entry = {}
+                        sequence_mode = False
+                        sequence_lines = []
+                    elif line.startswith("SQ"):
+                        sequence_mode = True
+                    elif sequence_mode:
+                        if line.strip():
+                            sequence_lines.append(line.strip())
                     else:
                         key, _, value = line.partition("   ")
                         key = key.strip()
