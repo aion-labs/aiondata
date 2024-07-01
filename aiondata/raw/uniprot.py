@@ -1,6 +1,7 @@
 import gzip
 import urllib.request
 from io import BytesIO
+from typing import Iterable, Dict
 
 from ..datasets import GeneratedDataset
 
@@ -65,7 +66,7 @@ class UniProt(GeneratedDataset):
             "OG": "Organelle",
         }
 
-    def to_generator(self):
+    def to_generator(self) -> Iterable[Dict]:
         """
         Streams and parses the gzipped UniProtKB data file, yielding each entry as a dictionary
         with human-readable keys.
