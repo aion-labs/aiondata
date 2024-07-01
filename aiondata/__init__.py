@@ -23,6 +23,8 @@ from .raw.moleculenet import (
     ClinTox,
 )
 
+from .raw.uniprot import UniProt
+
 from .raw.weizmann_ccca import Weizmann3CA
 
 from .processed.bindingaffinity import BindingAffinity
