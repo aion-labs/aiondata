@@ -18,7 +18,7 @@ class CachedDataset:
         Returns:
             Path: The cache path for the dataset.
         """
-        cache = Path(os.environ.get("AIONDATA_CACHE", Path("~/.aiondata"))).expanduser()
+        cache = Path(os.environ.get("AIONDATA_CACHE", "~/.aiondata")).expanduser()
         if hasattr(self, "COLLECTION"):
             cache = cache / self.COLLECTION
         cache.mkdir(parents=True, exist_ok=True)
