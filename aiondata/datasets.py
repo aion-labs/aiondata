@@ -65,9 +65,9 @@ class GeneratedDataset(CachedDataset):
     """A base class for datasets that are generated on-the-fly."""
 
     def get_df(self) -> pl.DataFrame:
-        if self.SCHEMA is None:
+        if hasattr(self, "SCHEMA"):
+            return pl.DataFrame(self.to_generator(), schema=self.SCHEMA, strict=False)
+        else:
             return pl.DataFrame(
                 self.to_generator(), infer_schema_length=25000, strict=False
             )
-        else:
-            return pl.DataFrame(self.to_generator(), schema=self.SCHEMA, strict=False)
