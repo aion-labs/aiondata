@@ -221,7 +221,7 @@ class PDBHandler(CachedDataset):
         """
         Fetches the UniProt accession number for a given PDB ID.
         Problem, this PDB ID does not use chain information. If you need to use chain information, do not remove the chain and run, this may give you the wrong UniProt accession.
-        
+
         Parameters:
             pdb_id (str): The PDB ID of the protein.
 
@@ -229,8 +229,9 @@ class PDBHandler(CachedDataset):
             str: The UniProt accession number if available, otherwise None.
         """
         url = "https://data.rcsb.org/graphql"
-        
-        query = """
+
+        query = (
+            """
         {
         entries(entry_ids: ["%s"]) {
             polymer_entities {
@@ -244,22 +245,28 @@ class PDBHandler(CachedDataset):
             }
         }
         }
-        """ % pdb_id
-        
+        """
+            % pdb_id
+        )
+
         try:
-            response = requests.post(url, json={'query': query})
+            response = requests.post(url, json={"query": query})
             response.raise_for_status()  # Raises an HTTPError for bad responses (4xx or 5xx)
             data = response.json()
-            
+
             # Extracting the UniProt accession number
             try:
-                db_accession = data['data']['entries'][0]['polymer_entities'][0]['rcsb_polymer_entity_container_identifiers']['reference_sequence_identifiers'][0]['database_accession']
-                db_name = data['data']['entries'][0]['polymer_entities'][0]['rcsb_polymer_entity_container_identifiers']['reference_sequence_identifiers'][0]['database_name']
+                db_accession = data["data"]["entries"][0]["polymer_entities"][0][
+                    "rcsb_polymer_entity_container_identifiers"
+                ]["reference_sequence_identifiers"][0]["database_accession"]
+                db_name = data["data"]["entries"][0]["polymer_entities"][0][
+                    "rcsb_polymer_entity_container_identifiers"
+                ]["reference_sequence_identifiers"][0]["database_name"]
                 return db_accession, db_name
             except (KeyError, IndexError) as e:
                 print(f"Error extracting data: {e}")
                 return None
-        
+
         except requests.RequestException as e:
             print(f"Request failed: {e}")
             return None
@@ -270,22 +277,22 @@ class PDBHandler(CachedDataset):
 
         Parameters:
             uniprot_id (str): The UniProt accession number.
-        
+
         Returns:
             str: The protein sequence if available, otherwise None.
-        
+
         """
         url = f"https://rest.uniprot.org/uniprotkb/{uniprot_id}.fasta"
-        
+
         response = requests.get(url)
-        
+
         if response.status_code == 200:
             # Split the response text into lines
-            lines = response.text.split('\n')
-            
+            lines = response.text.split("\n")
+
             # The first line is the header, we'll skip it
-            sequence = ''.join(lines[1:])
-            
+            sequence = "".join(lines[1:])
+
             return sequence.strip()
         else:
             print(f"Failed to fetch sequence. Status code: {response.status_code}")
