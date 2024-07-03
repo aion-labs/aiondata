@@ -60,7 +60,7 @@ def test_fetch_PDB_uniprot_accession(pdb_handler):
     with patch(
         "aiondata.raw.protein_structure.PDBHandler.fetch_PDB_uniprot_accession"
     ) as mock_PDB:
-        pdb_handler.fetch_PDB_uniprot_accession(pdbid=pdbid)
+        pdb_handler.fetch_PDB_uniprot_accession(pdbid)
         mock_PDB.assert_called()
 
 
@@ -70,7 +70,7 @@ def test_fetch_uniprot_sequence(pdb_handler):
     with patch(
         "aiondata.raw.protein_structure.PDBHandler.fetch_uniprot_sequence"
     ) as mock_uniprot:
-        pdb_handler.fetch_uniprot_sequence(uniprot=uniprot)
+        pdb_handler.fetch_uniprot_sequence(uniprot)
         mock_uniprot.assert_called()
 
 
