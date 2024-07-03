@@ -72,3 +72,19 @@ def test_fetch_uniprot_sequence(pdb_handler):
     ) as mock_uniprot:
         pdb_handler.fetch_uniprot_sequence(uniprot=uniprot)
         mock_uniprot.assert_called()
+
+
+@pytest.mark.integration
+def test_fetch_uniprot_sequence_with_internet_integration(pdb_handler):
+    """Test that a Sequence are fetched using a Uniprot accession, by actually calling the UniProt API"""
+    uniprot = "P00504"
+    result = pdb_handler.fetch_uniprot_sequence(uniprot)
+    assert "ADFREDGDSRKVNLGVGAYRTDEGQPWVLPVVRKVEQLIAGDGSLNHEYLPILGLPEFRA" in result
+
+
+@pytest.mark.integration
+def test_fetch_PDB_uniprot_accession_with_internet_integration(pdb_handler):
+    """Test that Uniprot accession are fetched using a PDB ID, by actually calling the PDB API"""
+    pdbid = "IAAT"
+    result = pdb_handler.fetch_PDB_uniprot_accession(pdbid)
+    # TODO: Write a correct assert here
