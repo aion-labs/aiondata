@@ -39,6 +39,7 @@ def test_search_pdb(pdb_handler):
     Uniprot_accession = "P04637"
     fromdb = "UniProt"
     nonpolymer = 1
+    experiment= "SOLUTION NMR"
     ComparisonType = "Less"
     with patch(
         "aiondata.raw.protein_structure.perform_search_with_graph"
@@ -48,6 +49,7 @@ def test_search_pdb(pdb_handler):
             organism=organism,
             Uniprot_accession=Uniprot_accession,
             fromdb=fromdb,
+            experiment=experiment,
             nonpolymer=nonpolymer,
             ComparisonType=ComparisonType,
         )
