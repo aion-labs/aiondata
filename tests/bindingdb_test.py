@@ -78,10 +78,13 @@ def test_dataframe_creation_from_cache(
     ), "DataFrame content does not match expected mock DataFrame."
 
 
-def test_bindingaffinity():
+@patch("pathlib.Path.mkdir")
+@patch("polars.DataFrame.write_parquet")
+@patch("pathlib.Path.exists")
+def test_bindingaffinity(mock_exists, mock_write_parquet, mock_mkdir):
     """Test that the BindingAffinity dataset is correctly created."""
+    mock_exists.return_value = False
     df = BindingAffinity(BindingDB.from_uncompressed_file(mock_sdf_path)).get_df()
-
     assert isinstance(df, pl.DataFrame), "DataFrame not created."
     assert df.height > 0, "DataFrame is empty."
     assert "SMILES" in df.columns, "SMILES column missing in DataFrame."
