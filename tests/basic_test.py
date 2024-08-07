@@ -21,7 +21,6 @@ from aiondata import (
     FoldswitchProteinsTableS1C,
     CodNas91,
     Weizmann3CA,
-    BindingAffinity,
 )
 
 # List of dataset classes
@@ -45,19 +44,10 @@ datasets = [
     FoldswitchProteinsTableS1C,
     CodNas91,
     Weizmann3CA,
-    BindingAffinity,
-]
-
-# List of dataset classes that the cache test should not be performed on
-dont_do_cache_test = [
-    BindingAffinity,
-]
-no_cache_datasets = [
-    dataset for dataset in datasets if dataset not in dont_do_cache_test
 ]
 
 
-@pytest.mark.parametrize("dataset_cls", no_cache_datasets)
+@pytest.mark.parametrize("dataset_cls", datasets)
 @patch("pathlib.Path.mkdir")
 @patch("polars.DataFrame.write_parquet")
 @patch("pathlib.Path.exists")
