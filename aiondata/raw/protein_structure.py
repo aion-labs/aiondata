@@ -106,7 +106,7 @@ class PDBHandler(CachedDataset):
         """
         if isinstance(pdb_ids, str):
             self.pdb_list.retrieve_pdb_file(
-                pdb_id, pdir=self.save_dir, file_format=file_format
+                pdb_ids, pdir=self.save_dir, file_format=file_format
             )
         else:
             for pdb_id in pdb_ids:
@@ -133,6 +133,7 @@ class PDBHandler(CachedDataset):
         fromdb=None,
         organism=None,
         Uniprot_accession=None,
+        experiment=None,
         nonpolymer=None,
         ComparisonType=None,
     ):
@@ -144,6 +145,7 @@ class PDBHandler(CachedDataset):
             fromdb (str, optional): Database name to search in. Defaults to None.
             organism (str, optional): Organism taxonomy ID to search for. Defaults to None.
             Uniprot_accession (str, optional): Uniprot accession number to search for. Defaults to None.
+            experiment (str, optional): Experiment method to search for. Defaults to None. Allowed option: ELECTRON CRYSTALLOGRAPHY, ELECTRON MICROSCOPY, EPR, FIBER DIFFRACTION, FLUORESCENCE TRANSFER, INFRARED SPECTROSCOPY, NEUTRON DIFFRACTION, POWDER DIFFRACTION, SOLID-STATE NMR, SOLUTION NMR, SOLUTION SCATTERING, THEORETICAL MODEL, X-RAY DIFFRACTION
             nonpolymer (int, optional): Number of non-polymer entities to compare. Defaults to None.
             ComparisonType (str, optional): Comparison type for nonpolymer comparison. Must be 'Greater' or 'Less'. Defaults to None.
 
@@ -188,6 +190,13 @@ class PDBHandler(CachedDataset):
                 attribute="rcsb_polymer_entity_container_identifiers.reference_sequence_identifiers.database_name",
             )
 
+        # experiment method
+        # allowed options: ELECTRON CRYSTALLOGRAPHY, ELECTRON MICROSCOPY, EPR, FIBER DIFFRACTION, FLUORESCENCE TRANSFER, INFRARED SPECTROSCOPY, NEUTRON DIFFRACTION, POWDER DIFFRACTION, SOLID-STATE NMR, SOLUTION NMR, SOLUTION SCATTERING, THEORETICAL MODEL, X-RAY DIFFRACTION
+        if experiment:
+            experiment = text_operators.ExactMatchOperator(
+                value=experiment, attribute="exptl.method"
+            )
+
         if nonpolymer is not None:
             if ComparisonType not in ["Greater", "Less"]:
                 raise ValueError("ComparisonType must be 'Greater' or 'Less'")
@@ -201,7 +210,7 @@ class PDBHandler(CachedDataset):
                 comparison_type=ComparisonType,
             )
 
-        queries = [fromdb, title, organism, Uniprot_accession, nonpolymer]
+        queries = [fromdb, title, organism, Uniprot_accession, nonpolymer, experiment]
         queries = [query for query in queries if query is not None]
 
         if len(queries) > 1:
