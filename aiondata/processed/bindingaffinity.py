@@ -8,6 +8,8 @@ from ..raw.bindingdb import BindingDB
 
 
 class BindingAffinity(CachedDataset):
+    COLLECTION = "processed"
+
     def __init__(self, fd: Optional[io.BufferedReader] = None):
         """
         Initializes a BindingAffinity instance.
