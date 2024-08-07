@@ -3,6 +3,7 @@ from pathlib import Path
 from unittest.mock import patch
 import polars as pl
 from aiondata import BindingDB
+from aiondata import BindingAffinity
 
 current_file_dir = Path(__file__).resolve().parent
 mock_sdf_path = current_file_dir / "mock.sdf"
@@ -75,3 +76,13 @@ def test_dataframe_creation_from_cache(
     assert df.frame_equal(
         mock_df
     ), "DataFrame content does not match expected mock DataFrame."
+
+
+def test_bindingaffinity():
+    """Test that the BindingAffinity dataset is correctly created."""
+    df = BindingAffinity(BindingDB.from_uncompressed_file(mock_sdf_path)).get_df()
+
+    assert isinstance(df, pl.DataFrame), "DataFrame not created."
+    assert df.height > 0, "DataFrame is empty."
+    assert "SMILES" in df.columns, "SMILES column missing in DataFrame."
+    assert "Sequence" in df.columns, "Sequence column missing in DataFrame."
