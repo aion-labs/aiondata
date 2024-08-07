@@ -19,8 +19,9 @@ class BindingAffinity(CachedDataset):
         self.bindingdb = BindingDB(fd)
 
     def get_df(self) -> pl.DataFrame:
-        bdb_df = self.bindingdb.to_df()
-        ba_df = bdb_df.select(
+        bindingdb = self.bindingdb.to_df()
+
+        ba_df = bindingdb.select(
             [
                 "SMILES",
                 "BindingDB Target Chain Sequence",
