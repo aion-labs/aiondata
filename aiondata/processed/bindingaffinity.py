@@ -4,6 +4,7 @@ from typing import Optional
 import polars as pl
 
 from ..datasets import CachedDataset
+from ..raw.bindingdb import BindingDB
 
 
 class BindingAffinity(CachedDataset):
