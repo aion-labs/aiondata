@@ -24,6 +24,9 @@ NV
 > <SMILES>
 CCCCC
 
+> <BindingDB Target Chain Sequence>
+MKKFFDSRREQIEAQLGQG
+
 $$$$
 Mol2
   AionLabs AvoGadro 2023
@@ -47,6 +50,9 @@ M  END
 > <SMILES>
 NOC=C
 
+> <BindingDB Target Chain Sequence>
+GLYVKLFPVFQPPCVLLH
+
 $$$$
 Mol3
   AionLabs AvoGadro 2023
@@ -62,6 +68,7 @@ Mol3
   2  4  1  0
   4  5  1  0
 M  END
+
 > <Ki (nM)>
 78.9
 
@@ -76,5 +83,8 @@ M  END
 
 > <SMILES>
 O=C(N)C=O
+
+> <BindingDB Target Chain Sequence>
+MGSSHHHHHHSSGLVPRGSH
 
 $$$$
