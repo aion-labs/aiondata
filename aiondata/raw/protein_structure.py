@@ -226,7 +226,7 @@ class PDBHandler(CachedDataset):
 
         return results
 
-    def fetch_PDB_uniprot_accession(pdb_id):
+    def fetch_PDB_uniprot_accession(self, pdb_id):
         """
         Fetches the UniProt accession number for a given PDB ID.
         Problem, this PDB ID does not use chain information. If you need to use chain information, do not remove the chain and run, this may give you the wrong UniProt accession.
@@ -280,7 +280,7 @@ class PDBHandler(CachedDataset):
             print(f"Request failed: {e}")
             return None
 
-    def fetch_uniprot_sequence(uniprot_id):
+    def fetch_uniprot_sequence(self, uniprot_id):
         """
         Fetches the sequence for a given UniProt accession number.
 
