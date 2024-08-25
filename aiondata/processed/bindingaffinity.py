@@ -8,7 +8,7 @@ from ..raw.bindingdb import BindingDB
 
 
 class BindingAffinity(CachedDataset):
-    COLLECTION = "processed"
+    COLLECTION = "processeds"
 
     def __init__(self, fd: Optional[io.BufferedReader] = None):
         """
@@ -52,5 +52,40 @@ class BindingAffinity(CachedDataset):
 
         # Remove spaces from BindingDB Target Chain Sequence column
         ba_df = ba_df.with_columns(pl.col("Sequence").str.replace_all(" ", ""))
+        ba_df = self.assess_binding(ba_df)
 
         return ba_df
+
+    def assess_binding(self, df: pl.DataFrame) -> pl.DataFrame:
+        """
+        Adds a column 'Good Affinity' to the DataFrame based on defined scientific thresholds.
+
+        Parameters:
+        df (pl.DataFrame): The DataFrame to process.
+
+        Returns:
+        pl.DataFrame: The DataFrame with the 'Binds' column added.
+        """
+        ki_threshold = 100
+        ic50_threshold = 250
+        kd_threshold = 150
+        ec50_threshold = 300
+
+        affinity_column = (
+            (
+                (pl.col("Ki (nM)").is_null() | (pl.col("Ki (nM)") < ki_threshold))
+                & (
+                    pl.col("IC50 (nM)").is_null()
+                    | (pl.col("IC50 (nM)") < ic50_threshold)
+                )
+                & (pl.col("Kd (nM)").is_null() | (pl.col("Kd (nM)") < kd_threshold))
+                & (
+                    pl.col("EC50 (nM)").is_null()
+                    | (pl.col("EC50 (nM)") < ec50_threshold)
+                )
+            )
+            .alias("Binds")
+            .cast(pl.Int32)
+        )
+
+        return df.with_columns(affinity_column)
