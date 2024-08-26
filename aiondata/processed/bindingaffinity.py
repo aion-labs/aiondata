@@ -8,7 +8,7 @@ from ..raw.bindingdb import BindingDB
 
 
 class BindingAffinity(CachedDataset):
-    COLLECTION = "processeds"
+    COLLECTION = "processed"
 
     def __init__(self, fd: Optional[io.BufferedReader] = None):
         """
