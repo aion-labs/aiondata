@@ -47,6 +47,13 @@ class CsvDataset(CachedDataset):
         return pl.read_csv(self.SOURCE)
 
 
+class TsvDataset(CachedDataset):
+    """A base class for datasets that are stored in TSV format."""
+
+    def get_df(self) -> pl.DataFrame:
+        return pl.read_csv(self.SOURCE, separator="\t")
+
+
 class ExcelDataset(CachedDataset):
     """A base class for datasets that are stored in Excel format."""
 
