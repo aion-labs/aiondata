@@ -27,4 +27,6 @@ from .raw.uniprot import UniProt
 
 from .raw.weizmann_ccca import Weizmann3CA
 
+from .raw.zinc import ZINC
+
 from .processed.bindingaffinity import BindingAffinity
