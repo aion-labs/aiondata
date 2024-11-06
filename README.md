@@ -21,6 +21,8 @@ AionData provides access to the following datasets:
 
 - **UniProt (Universal Protein Resource)**: UniProt provides a comprehensive, high-quality and freely accessible resource of protein sequence and functional information, which includes the manually annotated and reviewed dataset UniProtKB/Swiss-Prot.
 
+- **ZINC**: ZINC is a free database of commercially-available compounds for virtual screening.
+
 - **MoleculeNet**: An extensive collection of datasets curated to support and benchmark the development of machine learning models in the realm of drug discovery and chemical informatics. Covers a broad spectrum of molecular data including quantum mechanical properties, physical chemistry, biophysics, and physiological effects.
 
     - **Tox21**: Features qualitative toxicity measurements for 12,000 compounds across 12 targets, used for toxicity prediction.
