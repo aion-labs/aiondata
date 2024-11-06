@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from unittest.mock import patch
 import polars as pl
+from polars.testing import assert_frame_equal
 from aiondata import BindingDB
 from aiondata import BindingAffinity
 
@@ -73,9 +74,7 @@ def test_dataframe_creation_from_cache(
     mock_mkdir.assert_called_once_with(parents=True, exist_ok=True)
     mock_write_parquet.assert_not_called()
     mock_read_parquet.assert_called_once()
-    assert df.frame_equal(
-        mock_df
-    ), "DataFrame content does not match expected mock DataFrame."
+    assert_frame_equal(df, mock_df)
 
 
 @patch("pathlib.Path.mkdir")
