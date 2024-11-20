@@ -15,7 +15,7 @@ class BindingDB(GeneratedDataset):
     A public, web-accessible database of measured binding affinities, focusing chiefly on the interactions of protein considered to be drug-targets with small, drug-like molecules.
     """
 
-    SOURCE = "https://www.bindingdb.org/bind/downloads/BindingDB_All_3D_202402_sdf.zip"
+    SOURCE = "https://www.bindingdb.org/bind/downloads/BindingDB_All_3D_202411_sdf.zip"
     COLLECTION = "bindingdb"
     SCHEMA = [
         # Primary Identifiers
